@@ -11,6 +11,10 @@ sdl_image = "0.3.8"
 serde_derive = "1.0.218"
 serde_json = "1.0.140"
 image = "0.25.5"
+sauron = "0.62"
+log = "0.4"
+console_log = "1"
+console_error_panic_hook = "0.1"
 
 [dependencies.sdl2]
 version = "0.37.0"
