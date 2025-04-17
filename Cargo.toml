@@ -3,10 +3,17 @@ name = "FaksLife"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib"]
+
+[target.wasm32-unknown-unknown]
+rustflags = ['--cfg', 'getrandom_backend="wasm_js"']
+
 [dependencies]
-rand = "0.9.0"
+rand = "0.9.1"
 image = "0.25.5"
 sauron = "0.70.0"
 log = "0.4"
 console_log = "1"
 console_error_panic_hook = "0.1"
+getrandom = { version = "0.3", features = ["wasm_js"] }
