@@ -1,39 +1,79 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+use sauron::{
+    html::text, html::units::px, jss, node, wasm_bindgen, Application, Cmd, Node, Program,
+};
+
+enum Msg {
+    Increment,
+    Decrement,
+    Reset,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+struct App {
+    count: i32,
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+impl App {
+    fn new() -> Self {
+        App { count: 0 }
     }
 }
 
-use sauron::{node, wasm_bindgen, Application, Cmd, Node, Program};
-
-struct App;
-
 impl Application for App {
-    type MSG = ();
 
-    fn view(&self) -> Node<()> {
+    type MSG = Msg;
+
+    fn view(&self) -> Node<Msg> {
         node! {
-            <p>
-                "hello"
-            </p>
+            <main>
+                <input type="button"
+                    value="+"
+                    on_click=|_| {
+                        Msg::Increment
+                    }
+                />
+                <button class="count" on_click=|_|{Msg::Reset} >{text(self.count)}</button>
+                <input type="button"
+                    value="-"
+                    on_click=|_| {
+                        Msg::Decrement
+                    }
+                />
+            </main>
         }
     }
 
-    fn update(&mut self, _msg: ()) -> Cmd<()> {
+    fn update(&mut self, msg: Msg) -> Cmd<Msg> {
+        match msg {
+            Msg::Increment => self.count += 1,
+            Msg::Decrement => self.count -= 1,
+            Msg::Reset => self.count = 0,
+        }
         Cmd::none()
+    }
+
+    fn stylesheet() -> Vec<String> {
+        vec![jss! {
+            "body":{
+                font_family: "verdana, arial, monospace",
+            },
+
+            "main":{
+                width: px(30),
+                height: px(100),
+                margin: "auto",
+                text_align: "center",
+            },
+
+            "input, .count":{
+                font_size: px(40),
+                padding: px(30),
+                margin: px(30),
+            }
+        }]
     }
 }
 
 #[wasm_bindgen(start)]
-pub fn main() {
-    Program::mount_to_body(App);
+pub fn start() {
+    Program::mount_to_body(App::new());
 }
