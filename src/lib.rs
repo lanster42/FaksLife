@@ -1,6 +1,7 @@
 use sauron::{
-    html::text, html::units::px, jss, node, wasm_bindgen, Application, Cmd, Node, Program,
+    html::text, html::units::px, jss, node, Application, Cmd, Node, Program,
 };
+use sauron::wasm_bindgen;
 
 enum Msg {
     Increment,
