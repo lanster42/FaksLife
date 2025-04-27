@@ -30,17 +30,17 @@ impl Application for Model {
             Msg::MoveDown => self.player_y += 10,
             Msg::KeyDown(key) => {
                 match key.as_str() {
-                    "ArrowLeft" => self.player_x -= 10,
-                    "ArrowRight" => self.player_x += 10,
-                    "ArrowUp" => self.player_y -= 10,
-                    "ArrowDown" => self.player_y += 10,
+                    "ArrowLeft" | "a" => self.player_x -= 10,
+                    "ArrowRight" | "d" => self.player_x += 10,
+                    "ArrowUp" | "w" => self.player_y -= 10,
+                    "ArrowDown" | "s" => self.player_y += 10,
                     _ => {}
                 }
+                
             }
         }
         Cmd::none()
     }
-    
     // kako se narise na zaslon
     fn view(&self) -> Node<Self::MSG> {
         div(
@@ -72,8 +72,10 @@ impl Application for Model {
                 ),
             ],
         )
-    }    
+    }
     
+    
+
     fn style(&self) -> Vec<String> {
         vec![]
     }

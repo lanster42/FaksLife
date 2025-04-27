@@ -19,4 +19,5 @@ console_error_panic_hook = "0.1"
 sauron = "0.70.0"
 wasm-bindgen = "0.2"
 getrandom = { version = "0.2.12", features = ["js"] }
+wasm-timer = "0.2.5"
 
