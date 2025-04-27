@@ -12,6 +12,7 @@ pub enum Msg {
     MoveRight,
     MoveUp,
     MoveDown,
+    KeyDown(String),
 }
 
 impl Application for Model {
@@ -25,32 +26,50 @@ impl Application for Model {
         match msg {
             Msg::MoveLeft => self.player_x -= 1,
             Msg::MoveRight => self.player_x += 1,
-            Msg::MoveUp => self.player_y -= 1,
-            Msg::MoveDown => self.player_y += 1,
+            Msg::MoveUp => self.player_y += 1,
+            Msg::MoveDown => self.player_y -= 1,
+            Msg::KeyDown(key) => {
+                match key.as_str() {
+                    "ArrowLeft" => self.player_x -= 10,
+                    "ArrowRight" => self.player_x += 10,
+                    "ArrowUp" => self.player_y += 10,
+                    "ArrowDown" => self.player_y -= 10,
+                    _ => {}
+                }
+            }
         }
         Cmd::none()
     }
     // kako se narise na zaslon
     fn view(&self) -> Node<Self::MSG> {
         div(
-            [],
+            [
+                on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),
+                attr("tabindex", "0"), // <-- TOLE DODAJ !!!
+                style! {
+                    "width" : "100vw",
+                    "height" : "100vh",
+                    "outline" : "none", // da se ne vidi čuden outline
+                }
+            ],
             [
                 div(
-                    [],
-                    [text(format!("Igralec: ({}, {})", self.player_x, self.player_y))],
-                ),
-                div(
-                    [],
                     [
-                        button([on_click(|_| Msg::MoveLeft)], [text("Levo")]),
-                        button([on_click(|_| Msg::MoveRight)], [text("Desno")]),
-                        button([on_click(|_| Msg::MoveUp)], [text("Gor")]),
-                        button([on_click(|_| Msg::MoveDown)], [text("Dol")]),
+                        style! {
+                            "position" : "absolute",
+                            "width" : "50px",
+                            "height" : "50px",
+                            "background-color" : "blue",
+                            "left" : format!("{}px", self.player_x),
+                            "top" : format!("{}px", self.player_y),
+                        }
                     ],
+                    [],
                 ),
             ],
         )
     }
+    
 
     fn style(&self) -> Vec<String> {
         vec![]
@@ -60,7 +79,9 @@ impl Application for Model {
 #[wasm_bindgen(start)]
 pub fn start() {
     Program::mount_to_body(Model {
-        player_x: 4,
-        player_y: 3,
+        player_x: 100,
+        player_y: 100,
     });
 }
+
+
