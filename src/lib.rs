@@ -24,32 +24,36 @@ impl Application for Model {
     // kako se spremenijo podatki
     fn update(&mut self, msg: Self::MSG) -> Cmd<Self::MSG> {
         match msg {
-            Msg::MoveLeft => self.player_x -= 1,
-            Msg::MoveRight => self.player_x += 1,
-            Msg::MoveUp => self.player_y += 1,
-            Msg::MoveDown => self.player_y -= 1,
+            Msg::MoveLeft => self.player_x -= 10,
+            Msg::MoveRight => self.player_x += 10,
+            Msg::MoveUp => self.player_y -= 10,
+            Msg::MoveDown => self.player_y += 10,
             Msg::KeyDown(key) => {
                 match key.as_str() {
                     "ArrowLeft" => self.player_x -= 10,
                     "ArrowRight" => self.player_x += 10,
-                    "ArrowUp" => self.player_y += 10,
-                    "ArrowDown" => self.player_y -= 10,
+                    "ArrowUp" => self.player_y -= 10,
+                    "ArrowDown" => self.player_y += 10,
                     _ => {}
                 }
             }
         }
         Cmd::none()
     }
+    
     // kako se narise na zaslon
     fn view(&self) -> Node<Self::MSG> {
         div(
             [
                 on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),
-                attr("tabindex", "0"), // <-- TOLE DODAJ !!!
+                attr("tabindex", "0"),
                 style! {
                     "width" : "100vw",
                     "height" : "100vh",
-                    "outline" : "none", // da se ne vidi čuden outline
+                    "outline" : "none", // da ni cudnga outlinea
+                    "overflow" : "hidden", // Naj bi preprečilo premikanje strani
+                    "position" : "relative",
+                    "background-color" : "green",
                 }
             ],
             [
@@ -59,7 +63,7 @@ impl Application for Model {
                             "position" : "absolute",
                             "width" : "50px",
                             "height" : "50px",
-                            "background-color" : "blue",
+                            "background-color" : "red", //It's christmas
                             "left" : format!("{}px", self.player_x),
                             "top" : format!("{}px", self.player_y),
                         }
@@ -68,9 +72,8 @@ impl Application for Model {
                 ),
             ],
         )
-    }
+    }    
     
-
     fn style(&self) -> Vec<String> {
         vec![]
     }
