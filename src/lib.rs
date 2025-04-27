@@ -1,80 +1,66 @@
-use sauron::{
-    html::text, html::units::px, jss, node, Application, Cmd, Node, Program,
-};
-use sauron::wasm_bindgen;
+use sauron::prelude::*;
 
-enum Msg {
-    Increment,
-    Decrement,
-    Reset,
+// trenutna pozicija igralca
+pub struct Model {
+    player_x: i32,
+    player_y: i32,
 }
 
-struct App {
-    count: i32,
+// kliki na misko
+pub enum Msg {
+    MoveLeft,
+    MoveRight,
+    MoveUp,
+    MoveDown,
 }
 
-impl App {
-    fn new() -> Self {
-        App { count: 0 }
-    }
-}
-
-impl Application for App {
-
+impl Application for Model {
     type MSG = Msg;
 
-    fn view(&self) -> Node<Msg> {
-        node! {
-            <main>
-                <input type="button"
-                    value="+"
-                    on_click=|_| {
-                        Msg::Increment
-                    }
-                />
-                <button class="count" on_click=|_|{Msg::Reset} >{text(self.count)}</button>
-                <input type="button"
-                    value="-"
-                    on_click=|_| {
-                        Msg::Decrement
-                    }
-                />
-            </main>
-        }
+    fn init(&mut self) -> Cmd<Self::MSG> {
+        Cmd::none()
     }
-
-    fn update(&mut self, msg: Msg) -> Cmd<Msg> {
+    // kako se spremenijo podatki
+    fn update(&mut self, msg: Self::MSG) -> Cmd<Self::MSG> {
         match msg {
-            Msg::Increment => self.count += 1,
-            Msg::Decrement => self.count -= 1,
-            Msg::Reset => self.count = 0,
+            Msg::MoveLeft => self.player_x -= 1,
+            Msg::MoveRight => self.player_x += 1,
+            Msg::MoveUp => self.player_y -= 1,
+            Msg::MoveDown => self.player_y += 1,
         }
         Cmd::none()
     }
+    // kako se narise na zaslon
+    fn view(&self) -> Node<Self::MSG> {
+        div(
+            [],
+            [
+                div(
+                    [],
+                    [text(format!("Igralec: ({}, {})", self.player_x, self.player_y))],
+                ),
+                div(
+                    [],
+                    [
+                        button([on_click(|_| Msg::MoveLeft)], [text("Levo")]),
+                        button([on_click(|_| Msg::MoveRight)], [text("Desno")]),
+                        button([on_click(|_| Msg::MoveUp)], [text("Gor")]),
+                        button([on_click(|_| Msg::MoveDown)], [text("Dol")]),
+                    ],
+                ),
+            ],
+        )
+    }
 
-    fn stylesheet() -> Vec<String> {
-        vec![jss! {
-            "body":{
-                font_family: "verdana, arial, monospace",
-            },
-
-            "main":{
-                width: px(30),
-                height: px(100),
-                margin: "auto",
-                text_align: "center",
-            },
-
-            "input, .count":{
-                font_size: px(40),
-                padding: px(30),
-                margin: px(30),
-            }
-        }]
+    fn style(&self) -> Vec<String> {
+        vec![]
     }
 }
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    Program::mount_to_body(App::new());
+    Program::mount_to_body(Model {
+        player_x: 4,
+        player_y: 3,
+    });
 }
