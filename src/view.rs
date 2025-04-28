@@ -6,6 +6,7 @@ pub fn view(player: &Player) -> Node<Msg> {
     div(
         [
             on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),
+            on_keyup(|event: KeyboardEvent| Msg::KeyUp(event.key())),
             attr("tabindex", "0"),
             style! {
                 "width" : "100vw",
@@ -33,3 +34,4 @@ pub fn view(player: &Player) -> Node<Msg> {
         ],
     )
 }
+

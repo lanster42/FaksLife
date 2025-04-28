@@ -1,3 +1,2 @@
-pub mod player; 
-
-/* zaenkrat se ne uporabljen */
+pub mod player;
+pub mod gamestate; //zato da povemo, kaj lahko uporabljamo

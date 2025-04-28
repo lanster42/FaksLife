@@ -3,14 +3,14 @@ mod msg;
 mod update;
 mod view;
 
-use crate::models::player::Player;
-use crate::msg::Msg;
 use sauron::prelude::*;
+use crate::models::gamestate::GameState;
+use crate::msg::Msg;
 use crate::update::update;
 use crate::view::view;
 
 pub struct Model {
-    player: Player,
+    game_state: GameState,
 }
 
 impl Application for Model {
@@ -21,11 +21,11 @@ impl Application for Model {
     }
 
     fn update(&mut self, msg: Self::MSG) -> Cmd<Self::MSG> {
-        update(&mut self.player, msg)
+        update(&mut self.game_state, msg)
     }
 
     fn view(&self) -> Node<Self::MSG> {
-        view(&self.player)
+        view(&self.game_state.player)
     }
 
     fn style(&self) -> Vec<String> {
@@ -36,6 +36,6 @@ impl Application for Model {
 #[wasm_bindgen(start)]
 pub fn start() {
     Program::mount_to_body(Model {
-        player: Player::new(100, 100),
+        game_state: GameState::new(),  // Tukaj pokličemo konstruktor
     });
 }
