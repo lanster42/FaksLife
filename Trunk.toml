@@ -1,3 +1,6 @@
 [[copy]]
 source = "static"
 destination = "static"
+
+[build]
+public_url = "/"

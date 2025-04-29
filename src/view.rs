@@ -14,13 +14,27 @@ pub fn view(player: &Player) -> Node<Msg> {
                 "outline" : "none",
                 "overflow" : "hidden",
                 "position" : "relative",
-                "background-image" : "url('/background/weird_pic.png')",
-                "background-size" : "cover",
-                "image-rendering" : "pixelated",
-
-            }
+            },
         ],
         [
+            // Ozadje
+            img(
+                vec![
+                    attr("src", "/static/background/soba.png"),
+                    style! {
+                        "position" : "absolute",
+                        "top": "0px",
+                        "left": "0px",
+                        "width": "100%",
+                        "height": "100%",
+                        "z-index": "0",
+                        "image-rendering": "pixelated",
+                    },
+                ],
+                vec![],
+            ),
+
+            // Igralec
             div(
                 [
                     style! {
@@ -30,6 +44,7 @@ pub fn view(player: &Player) -> Node<Msg> {
                         "background-color" : "red",
                         "left" : format!("{}px", player.x),
                         "top" : format!("{}px", player.y),
+                        "z-index": "1",
                     }
                 ],
                 [],
@@ -37,4 +52,5 @@ pub fn view(player: &Player) -> Node<Msg> {
         ],
     )
 }
+
 
