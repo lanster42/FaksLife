@@ -14,7 +14,10 @@ pub fn view(player: &Player) -> Node<Msg> {
                 "outline" : "none",
                 "overflow" : "hidden",
                 "position" : "relative",
-                "background-color" : "green",
+                "background-image" : "url('/background/weird_pic.png')",
+                "background-size" : "cover",
+                "image-rendering" : "pixelated",
+
             }
         ],
         [
