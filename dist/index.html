@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 
-<html>
+ 
+<html lang="en">
   <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>Counter</title>
-    <style type="text/css">
-        body { font-family: verdana, arial, monospace; }
-        main {
-            width:30px;
-            height: 100px;
-            margin:auto;
-            text-align: center;
-        }
-        input, .count{
-            font-size: 40px;
-            padding: 30px;
-            margin: 30px;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <title>FaksLife</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module">
-        import init from './pkg/FaksLife.js';
-        await init().catch(console.error);
+      import init from "./pkg/FaksLife.js";
+      init().catch(console.error);
     </script>
-  <link rel="modulepreload" href="/FaksLife-5dcf0d8d1fe1853c.js" crossorigin="anonymous" integrity="sha384-s2+P4GL9d4b8K535XrEj+yUFdJ28uIFV7Ds7IUJy0uC6MKXzbl56ZSU7UWx+tm7f"><link rel="preload" href="/FaksLife-5dcf0d8d1fe1853c_bg.wasm" crossorigin="anonymous" integrity="sha384-vqD6i/wLiSgYH9us/aeCegYi45qBnaSks8pmWLfVqBO/t01K35QdlBczg1kCt9Yu" as="fetch" type="application/wasm"></head>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  <link rel="modulepreload" href="/FaksLife-86c0f06caf62f344.js" crossorigin="anonymous" integrity="sha384-h7+x/qlKfwhiFkgu0OmqGUkcqSj47zjdDyvVToHAjUTqw3n3bmxKe7SYX2spG4Jl"><link rel="preload" href="/FaksLife-86c0f06caf62f344_bg.wasm" crossorigin="anonymous" integrity="sha384-zQkgzGLlIJwYaL85ZR9uUmyyguB0dfAS8RWTmx/45lKnKgszHgFhwp7XxX4x+LIc" as="fetch" type="application/wasm"></head>
   <body>
   
 <script type="module">
-import init, * as bindings from '/FaksLife-5dcf0d8d1fe1853c.js';
-const wasm = await init({ module_or_path: '/FaksLife-5dcf0d8d1fe1853c_bg.wasm' });
+import init, * as bindings from '/FaksLife-86c0f06caf62f344.js';
+const wasm = await init({ module_or_path: '/FaksLife-86c0f06caf62f344_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -166,3 +163,15 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 })()
 </script></body>
 </html>
+
+
+<!-- <!DOCTYPE html>
+<link data-trunk rel="copy-dir" href="static" />
+
+<html>
+  <head><meta charset="utf-8" /></head>
+  <body>
+    <img src="/static/background/weird_pic.png" />
+  </body>
+</html>
+ -->

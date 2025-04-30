@@ -17,10 +17,10 @@ pub fn view(player: &Player) -> Node<Msg> {
             },
         ],
         [
-            // Ozadje
+            // Ozadje kot img
             img(
                 vec![
-                    attr("src", "/static/background/soba.png"),
+                    attr("src", "/static/background/slika.png"),
                     style! {
                         "position" : "absolute",
                         "top": "0px",
@@ -34,21 +34,23 @@ pub fn view(player: &Player) -> Node<Msg> {
                 vec![],
             ),
 
-            // Igralec
-            div(
+            // Igralec kot rdeč kvadrat
+            img(
                 [
+                    attr("src", "/static/characters/gremlin.png"), // pot do tvoje slike
                     style! {
-                        "position" : "absolute",
-                        "width" : "50px",
-                        "height" : "50px",
-                        "background-color" : "red",
-                        "left" : format!("{}px", player.x),
-                        "top" : format!("{}px", player.y),
+                        "position": "absolute",
+                        "width": "70px",
+                        "height": "70px",
+                        "left": format!("{}px", player.x),
+                        "top": format!("{}px", player.y),
                         "z-index": "1",
-                    }
+                        "image-rendering": "pixelated", // ohrani pixel art izgled
+                    },
                 ],
                 [],
-            ),
+            )
+            
         ],
     )
 }

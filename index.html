@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 
-<html>
+<link data-trunk rel="copy-dir" href="static" /> 
+<html lang="en">
   <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>Counter</title>
-    <style type="text/css">
-        body { font-family: verdana, arial, monospace; }
-        main {
-            width:30px;
-            height: 100px;
-            margin:auto;
-            text-align: center;
-        }
-        input, .count{
-            font-size: 40px;
-            padding: 30px;
-            margin: 30px;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <title>FaksLife</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module">
-        import init from './pkg/FaksLife.js';
-        await init().catch(console.error);
+      import init from "./pkg/FaksLife.js";
+      init().catch(console.error);
     </script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
   </body>
 </html>
+
+
+<!-- <!DOCTYPE html>
+<link data-trunk rel="copy-dir" href="static" />
+
+<html>
+  <head><meta charset="utf-8" /></head>
+  <body>
+    <img src="/static/background/weird_pic.png" />
+  </body>
+</html>
+ -->

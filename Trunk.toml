@@ -1,6 +1,5 @@
-[[copy]]
-source = "static"
-destination = "static"
-
 [build]
-public_url = "/"
+target = "index.html"
+
+[[static]]
+dir = "static"
