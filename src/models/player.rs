@@ -13,18 +13,18 @@ impl Player {
     }
 
     pub fn move_left(&mut self) {
-        self.x -= 10;
+        self.x -= 4;
     }
 
     pub fn move_right(&mut self) {
-        self.x += 10;
+        self.x += 4;
     }
 
     pub fn move_up(&mut self) {
-        self.y -= 10;
+        self.y -= 4;
     }
 
     pub fn move_down(&mut self) {
-        self.y += 10;
+        self.y += 4;
     }
 }

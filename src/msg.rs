@@ -6,4 +6,5 @@ pub enum Msg {
     MoveDown,
     KeyDown(String),
     KeyUp(String),
+    Tick,
 }
