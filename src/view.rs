@@ -1,5 +1,5 @@
 use crate::msg::Msg;
-use crate::models::player::Player;
+use crate::models::player::{Player, Smer}; // Dodano: Smer
 use sauron::prelude::*;
 
 pub fn view(player: &Player) -> Node<Msg> {
@@ -17,7 +17,7 @@ pub fn view(player: &Player) -> Node<Msg> {
             },
         ],
         [
-            // Ozadje kot img
+            // Ozadje
             img(
                 vec![
                     attr("src", "/static/background/slika.png"),
@@ -34,25 +34,30 @@ pub fn view(player: &Player) -> Node<Msg> {
                 vec![],
             ),
 
-            // Igralec kot rdeč kvadrat
-            img(
-                [
-                    attr("src", "/static/characters/gremlin.png"), // pot do tvoje slike
-                    style! {
-                        "position": "absolute",
-                        "width": "70px",
-                        "height": "70px",
-                        "left": format!("{}px", player.x),
-                        "top": format!("{}px", player.y),
-                        "z-index": "1",
-                        "image-rendering": "pixelated", // ohrani pixel art izgled
-                    },
-                ],
-                [],
-            )
-            
+            // Igralec (animirana smer levo/desno/stoji)
+            {
+                let src = match player.smer {
+                    Smer::Levo => "/static/characters/lan_levo_0.png",
+                    Smer::Desno => "/static/characters/lan_desno_0.png",
+                    Smer::Stoji => "/static/characters/gremlin.png",
+                };
+
+                img(
+                    [
+                        attr("src", src),
+                        style! {
+                            "position": "absolute",
+                            "width": "70px",
+                            "height": "70px",
+                            "left": format!("{}px", player.x),
+                            "top": format!("{}px", player.y),
+                            "z-index": "1",
+                            "image-rendering": "pixelated",
+                        },
+                    ],
+                    [],
+                )
+            },
         ],
     )
 }
-
-

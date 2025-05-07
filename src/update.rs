@@ -1,5 +1,6 @@
 use crate::models::gamestate::GameState;
 use crate::msg::Msg;
+use crate::models::player::Smer;
 use sauron::Cmd;
 
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
@@ -28,20 +29,44 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
             game_state.pressed_keys.remove(&key);
         }
         Msg::Tick => {
-            if game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a") {
+            let left = game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a");
+            let right = game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d");
+            let up = game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w");
+            let down = game_state.pressed_keys.contains("ArrowDown") || game_state.pressed_keys.contains("s");
+
+            // Premikanje
+            if left {
                 game_state.player.move_left();
             }
-            if game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d") {
+            if right {
                 game_state.player.move_right();
             }
-            if game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w") {
+            if up {
                 game_state.player.move_up();
             }
-            if game_state.pressed_keys.contains("ArrowDown") || game_state.pressed_keys.contains("s") {
+            if down {
                 game_state.player.move_down();
             }
+
+            // Posodobi smer
+            if left && !right {
+                game_state.player.smer = Smer::Levo;
+            } else if right && !left {
+                game_state.player.smer = Smer::Desno;
+            } else {
+                game_state.player.smer = Smer::Stoji;
+            }
+
+            // Posodobi ali se giblje in animacijo
+            game_state.player.moving = left || right || up || down;
+
+            if game_state.player.moving {
+                game_state.player.frame = (game_state.player.frame + 1) % 4; // če imaš 4 frame animacije
+            } else {
+                game_state.player.frame = 0;
+            }
         }
-        
     }
+
     Cmd::none()
 }

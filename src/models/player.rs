@@ -1,15 +1,31 @@
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Smer {
+    Levo,
+    Desno,
+    Stoji,
+}
+
 pub struct Player {
-    //pub name: String,
+    // pub name: String,
     pub x: i32,
     pub y: i32,
-    //pub money: u32,
-    //pub attention: u32,
-    //pub anxiety: u32,
+    pub smer: Smer,
+    pub moving: bool,
+    pub frame: usize,
+    // pub money: u32,
+    // pub attention: u32,
+    // pub anxiety: u32,
 }
 
 impl Player {
     pub fn new(x: i32, y: i32) -> Self {
-        Player { x, y }
+        Player {
+            x,
+            y,
+            smer: Smer::Stoji,
+            moving: false,
+            frame: 0,
+        }
     }
 
     pub fn move_left(&mut self) {
