@@ -37,9 +37,9 @@ pub fn view(player: &Player) -> Node<Msg> {
             // Igralec (animirana smer levo/desno/stoji)
             {
                 let src = match player.smer {
-                    Smer::Levo => "/static/characters/lan_levo_0.png",
-                    Smer::Desno => "/static/characters/lan_desno_0.png",
-                    Smer::Stoji => "/static/characters/gremlin.png",
+                    Smer::Levo => "/static/characters/lan_levo.png",
+                    Smer::Desno => "/static/characters/lan_desno.png",
+                    Smer::Stoji => "/static/characters/lan_naravnost.png",
                 };
 
                 img(
