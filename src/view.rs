@@ -47,8 +47,8 @@ pub fn view(player: &Player) -> Node<Msg> {
                         attr("src", src),
                         style! {
                             "position": "absolute",
-                            "width": "70px",
-                            "height": "70px",
+                            "width": "100px",
+                            "height": "100px",
                             "left": format!("{}px", player.x),
                             "top": format!("{}px", player.y),
                             "z-index": "1",
