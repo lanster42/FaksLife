@@ -20,7 +20,7 @@ pub fn view(player: &Player) -> Node<Msg> {
             // Ozadje
             img(
                 vec![
-                    attr("src", "/static/background/slika.png"),
+                    attr("src", "/static/background/kavarna.png"),
                     style! {
                         "position" : "absolute",
                         "top": "0px",
