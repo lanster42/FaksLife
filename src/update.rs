@@ -33,35 +33,45 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
             let right = game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d");
             let up = game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w");
             let down = game_state.pressed_keys.contains("ArrowDown") || game_state.pressed_keys.contains("s");
-
-            // Premikanje
+        
+            let mut dx = 0.0;
+            let mut dy = 0.0;
             if left {
-                game_state.player.move_left();
+                dx -= 1.0;
             }
             if right {
-                game_state.player.move_right();
+                dx += 1.0;
             }
             if up {
-                game_state.player.move_up();
+                dy -= 1.0;
             }
             if down {
-                game_state.player.move_down();
+                dy += 1.0;
             }
-
-            // Posodobi smer
-            if left && !right {
+        
+            if dx != 0.0 && dy != 0.0 {
+                let norm = ((dx * dx + dy * dy) as f32).sqrt();
+                dx /= norm;
+                dy /= norm;
+            }
+        
+            let speed = 4.0;
+            dx *= speed;
+            dy *= speed;
+        
+            game_state.player.move_by(dx, dy);
+      
+            if dx < 0.0 {
                 game_state.player.smer = Smer::Levo;
-            } else if right && !left {
+            } else if dx > 0.0 {
                 game_state.player.smer = Smer::Desno;
             } else {
                 game_state.player.smer = Smer::Stoji;
             }
-
-            // Posodobi ali se giblje in animacijo
-            game_state.player.moving = left || right || up || down;
-
+        
+            game_state.player.moving = dx != 0.0 || dy != 0.0;
             if game_state.player.moving {
-                game_state.player.frame = (game_state.player.frame + 1) % 4; // če imaš 4 frame animacije
+                game_state.player.frame = (game_state.player.frame + 1) % 4;
             } else {
                 game_state.player.frame = 0;
             }
