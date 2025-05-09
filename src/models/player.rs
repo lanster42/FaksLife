@@ -43,4 +43,9 @@ impl Player {
     pub fn move_down(&mut self) {
         self.y += 4;
     }
+
+    pub fn move_by(&mut self, dx: f32, dy: f32) {
+        self.x = (self.x as f32 + dx).round() as i32;
+        self.y = (self.y as f32 + dy).round() as i32;
+    }
 }

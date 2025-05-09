@@ -1,5 +1,5 @@
 use crate::msg::Msg;
-use crate::models::player::{Player, Smer}; // Dodano: Smer
+use crate::models::player::{Player, Smer};
 use sauron::prelude::*;
 
 pub fn view(player: &Player) -> Node<Msg> {
@@ -34,7 +34,7 @@ pub fn view(player: &Player) -> Node<Msg> {
                 vec![],
             ),
 
-            // Igralec (animirana smer levo/desno/stoji)
+            // Player
             {
                 let src = match player.smer {
                     Smer::Levo => "/static/characters/lan_levo.png",
