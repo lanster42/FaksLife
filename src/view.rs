@@ -22,7 +22,7 @@ pub fn view(player: &Player) -> Node<Msg> {
                 vec![
                     attr("src", "/static/background/kavarna.png"),
                     style! {
-                        "position" : "relative",
+                        "position" : "absolute",
                         "top": "0px",
                         "left": "0px",
                         "width": "100%",
@@ -47,8 +47,8 @@ pub fn view(player: &Player) -> Node<Msg> {
                         attr("src", src),
                         style! {
                             "position": "absolute",
-                            "width": "150px",
-                            "height": "150px",
+                            "width": "100px",
+                            "height": "100px",
                             "left": format!("{}px", player.x),
                             "top": format!("{}px", player.y),
                             "z-index": "1",
