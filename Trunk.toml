@@ -1,5 +1,10 @@
 [build]
 target = "index.html"
+dist = "dist"
 
 [[static]]
 dir = "static"
+
+[[copy]]
+source = "static"
+dest = "static"

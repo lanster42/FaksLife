@@ -2,6 +2,9 @@ use crate::models::gamestate::GameState;
 use crate::msg::Msg;
 use crate::models::player::Smer;
 use sauron::Cmd;
+use web_sys::window;
+use web_sys::HtmlAudioElement;
+use wasm_bindgen::JsCast;
 
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
     match msg {
@@ -10,6 +13,18 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
         Msg::MoveUp => game_state.player.move_up(),
         Msg::MoveDown => game_state.player.move_down(),
         Msg::KeyDown(key) => {
+            if !game_state.music_started {
+                if let Some(win) = window() {
+                    if let Some(doc) = win.document() {
+                        if let Some(el) = doc.get_element_by_id("bg-music") {
+                            if let Ok(audio) = el.dyn_into::<HtmlAudioElement>() {
+                                let _ = audio.play(); 
+                            }
+                        }
+                    }
+                }
+            }
+                game_state.music_started = true;
             game_state.pressed_keys.insert(key.clone());
 
             if game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a") {
@@ -29,6 +44,15 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
             game_state.pressed_keys.remove(&key);
         }
         Msg::Tick => {
+            if let Some(window) = window() {
+                if let Some(document) = window.document() {
+                    if let Some(el) = document.get_element_by_id("bg-music") {
+                        if let Ok(audio) = el.dyn_into::<HtmlAudioElement>() {
+                            let _ = audio.play();
+                        }
+                    }
+                }
+            }
             let left = game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a");
             let right = game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d");
             let up = game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w");
