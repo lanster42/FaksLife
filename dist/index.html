@@ -19,12 +19,18 @@
         width: 100%;
       }
     </style>
-  <link rel="modulepreload" href="/FaksLife-5edc7de48d3e027b.js" crossorigin="anonymous" integrity="sha384-dY6+xw4g9ZKV7KL57ASFlg3GHhBpj00QoZ8rmx+sRiRlogyLKcpcvpsRFyeS3rvx"><link rel="preload" href="/FaksLife-5edc7de48d3e027b_bg.wasm" crossorigin="anonymous" integrity="sha384-gT51TcUG/kBcWOurWVhb7u4IIr+0QpZgKEUtCl6wGpJYhIdtkCrz3Z9hKmYhiMBg" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/FaksLife-c85eb90075dcef1f.js" crossorigin="anonymous" integrity="sha384-t0MMZCxDccSiZOPJ4v44KBu8GUdd8k1Pu+DLI7erEWwdinQdynak0Mc3sgKWr6cW"><link rel="preload" href="/FaksLife-c85eb90075dcef1f_bg.wasm" crossorigin="anonymous" integrity="sha384-0gx7MdQHg88BK/DJZ+V0xcfTK//+bIiu80TIvBwZm29ph8oSVnseWCtco7EM5y/v" as="fetch" type="application/wasm"></head>
   <body>
+    <audio
+  id="bg-music"
+  src="music/First-main.mp3"
+  preload="auto"
+  loop
+></audio>
   
 <script type="module">
-import init, * as bindings from '/FaksLife-5edc7de48d3e027b.js';
-const wasm = await init({ module_or_path: '/FaksLife-5edc7de48d3e027b_bg.wasm' });
+import init, * as bindings from '/FaksLife-c85eb90075dcef1f.js';
+const wasm = await init({ module_or_path: '/FaksLife-c85eb90075dcef1f_bg.wasm' });
 
 
 window.wasmBindings = bindings;
