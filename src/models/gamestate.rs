@@ -4,6 +4,7 @@ use std::collections::HashSet;
 pub struct GameState {
     pub player: Player,
     pub pressed_keys: HashSet<String>,
+    pub music_started: bool,
 }
 
 impl GameState {
@@ -11,6 +12,7 @@ impl GameState {
         Self {
             player: Player::new(100, 100),
             pressed_keys: HashSet::new(),
+            music_started: false
         }
     }
 }

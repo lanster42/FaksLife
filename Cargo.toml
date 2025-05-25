@@ -11,6 +11,7 @@ rustflags = ['--cfg', 'getrandom_backend="wasm_js"']
 
 [dependencies]
 image = "0.25.5"
+web-sys = { version = "0.3", features = ["Window", "HtmlAudioElement", "Document", "Element"] }
 
 
 log = "0.4"
