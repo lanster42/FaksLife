@@ -14,20 +14,22 @@ pub fn view(player: &Player) -> Node<Msg> {
                 "outline" : "none",
                 "overflow" : "hidden",
                 "position" : "relative",
+                "background-color" : "black",
             },
         ],
         [
-            // Ozadje
+            // Prostor
             img(
                 vec![
-                    attr("src", "/static/background/delo_v_teku.png"),
+                    attr("src", "/static/background/Kavarna.png"),
                     style! {
-                        "position" : "absolute",
-                        "top": "0px",
-                        "left": "0px",
-                        "width": "100%",
-                        "height": "100%",
-                        "z-index": "0",
+                        "position" : "fixed",
+                        "top": "50%",
+                        "left": "50%",
+                        "transform": "translate(-50%, -50%)", /* levi rob se bo pomaknu na sredino (da se scentrira) in potem se bo s tansform pomaknu nazaj za polovico sobe. Enako velja za zgornji rob. */
+                        "width": "1200px",
+                        "border": "3px",
+                        "z-index": "1",
                         "image-rendering": "pixelated",
                     },
                 ],
