@@ -21,7 +21,7 @@ pub fn view(player: &Player) -> Node<Msg> {
             // Prostor
             img(
                 vec![
-                    attr("src", "/static/background/Kavarna.png"),
+                    attr("src", "/static/background/Kavarna_proba.png"),
                     style! {
                         "position" : "fixed",
                         "top": "50%",
@@ -49,8 +49,8 @@ pub fn view(player: &Player) -> Node<Msg> {
                         attr("src", src),
                         style! {
                             "position": "absolute",
-                            "width": "100px",
-                            "height": "100px",
+                            "width": "150px",
+                            "height": "150px",
                             "left": format!("{}px", player.x),
                             "top": format!("{}px", player.y),
                             "z-index": "1",
