@@ -9,14 +9,14 @@ use gloo_timers::future::TimeoutFuture;
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
     match msg {
         Msg::StartPressed => {
-            game_state.screen = Screen::StartPressed;
+    game_state.screen = Screen::StartPressed;
 
-            // Namesto dispatch, uporabimo Cmd::from_async
-            Cmd::from_async(async {
-                TimeoutFuture::new(300).await;
-                Msg::StartFinished
-            })
-        }
+    Cmd::once(async {
+        gloo_timers::future::TimeoutFuture::new(300).await;
+        Msg::StartFinished
+    })
+}
+
 
         Msg::StartFinished => {
             game_state.screen = Screen::Playing;
@@ -76,16 +76,6 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
                 }
 
                 Msg::Tick => {
-                    if let Some(window) = window() {
-                        if let Some(document) = window.document() {
-                            if let Some(el) = document.get_element_by_id("bg-music") {
-                                if let Ok(audio) = el.dyn_into::<HtmlAudioElement>() {
-                                    let _ = audio.play();
-                                }
-                            }
-                        }
-                    }
-
                     let left = game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a");
                     let right = game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d");
                     let up = game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w");
