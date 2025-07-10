@@ -2,10 +2,19 @@ use crate::models::player::Player;
 use std::collections::HashSet;
 use web_sys::window;
 
+pub enum Screen {
+    Start,
+    StartPressed,
+    Playing,
+    //MainMenu,
+    //GameOver,
+}
+
 pub struct GameState {
     pub player: Player,
     pub pressed_keys: HashSet<String>,
     pub music_started: bool,
+    pub screen: Screen,
 }
 
 fn get_screen_size() -> (i32, i32) {
@@ -27,7 +36,8 @@ impl GameState {
         Self {
             player: Player::new(x, y),
             pressed_keys: HashSet::new(),
-            music_started: false
+            music_started: false,
+            screen: Screen::Start,
         }
     }
 }

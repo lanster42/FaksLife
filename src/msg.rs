@@ -1,4 +1,5 @@
 // Definicije vseh sporočil
+#[derive(Clone)]
 pub enum Msg {
     MoveLeft,
     MoveRight,
@@ -7,4 +8,6 @@ pub enum Msg {
     KeyDown(String),
     KeyUp(String),
     Tick,
+    StartPressed,
+    StartFinished,
 }

@@ -8,6 +8,7 @@ use wasm_bindgen::JsCast;
 use web_sys::window;
 use std::rc::Rc;
 use std::cell::RefCell;
+
 use crate::models::gamestate::GameState;
 use crate::msg::Msg;
 use crate::update::update;
