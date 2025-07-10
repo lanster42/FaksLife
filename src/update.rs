@@ -4,24 +4,24 @@ use crate::msg::Msg;
 use sauron::Cmd;
 use web_sys::{window, HtmlAudioElement};
 use wasm_bindgen::JsCast;
-use gloo_timers::future::TimeoutFuture;
 
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
     match msg {
         Msg::StartPressed => {
-    game_state.screen = Screen::StartPressed;
+            game_state.screen = Screen::StartPressed;
 
-    Cmd::once(async {
-        gloo_timers::future::TimeoutFuture::new(300).await;
-        Msg::StartFinished
-    })
-}
-
+            Cmd::once(async {
+                gloo_timers::future::TimeoutFuture::new(300).await;
+                Msg::StartFinished
+            })
+        }
 
         Msg::StartFinished => {
             game_state.screen = Screen::Playing;
             Cmd::none()
         }
+
+        Msg::Ignore => Cmd::none(),
 
         Msg::MoveLeft
         | Msg::MoveRight

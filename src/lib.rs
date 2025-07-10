@@ -27,7 +27,8 @@ impl Application for Model {
     }
 
     fn view(&self) -> Node<Self::MSG> {
-        view(&self.game_state.player)
+        // 🔧 popravljen klic funkcije view
+        view(&self.game_state)
     }
 
     fn style(&self) -> Vec<String> {

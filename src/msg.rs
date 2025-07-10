@@ -10,4 +10,5 @@ pub enum Msg {
     Tick,
     StartPressed,
     StartFinished,
+    Ignore,
 }
