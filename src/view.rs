@@ -15,7 +15,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/start/start1.png"),        //start screen image
+                        attr("src", "/static/start/start1.png"),        //start screen background image
                         style! {
                             "width": "100%",
                             "height": "100%",
@@ -25,21 +25,34 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             "top": "0"
                             "left": "0"
                         },
-                        on_click(|mouse_event: MouseEvent| {        //when user clicks on starting screen, check where they clicked and decide whether he 'hit' the start button
-                            let x = mouse_event.client_x();     //when user clicks, check the x coord
-                            let y = mouse_event.client_y();
-                            if x > 100 && x < 300 && y > 100 && y < 200 {       //coordinares of a rectangle of START BUTTON
-                                Msg::StartPressed       //if inside rectangle => StartPressed
-                            } else {
-                                Msg::Ignore     //if missed (outside rectangle) => Ignore :)
-                            }
-                        }),
                     ],
                     [],
-                )],
-            )
-        }
+                ),
 
+                // Start button image on top of the background
+                img(
+                [
+                        attr("src", "/static/start/start_button.png"),
+                        style! {
+                            "position": "absolute",
+                            "left": "45%",      // where the start button is located
+                            "top": "70%",
+                            "width": "200px",   // button size
+                            "height": "80px",
+                            "cursor": "pointer",        //gives you clickable cursor
+                            "image-rendering": "pixelated",
+                            "z-index": "10",    // makes sure it's on top of the background image
+                        },
+                    on_click(|_| Msg::StartPressed),  // <── simpler!
+                ],
+                [],
+            ),
+                ],
+        )
+        }
+        //later if we want to add the transition state of the button, we can just add a new msg type and another image :)
+
+        //this is the transition period between start screen and playing screen
         Screen::StartPressed => {
             div(
                 [
