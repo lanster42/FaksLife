@@ -5,7 +5,7 @@ use sauron::Cmd;
 use web_sys::{window, HtmlAudioElement};
 use wasm_bindgen::JsCast;
 
-pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {
+pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this function will decide how to react to msgs
     match msg {
         Msg::StartPressed => {
             game_state.screen = Screen::StartPressed;
