@@ -15,7 +15,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/start/start1.png"),        //start screen background image
+                        attr("src", "/static/background/start/start1.png"),        //start screen background image
                         style! {
                             "width": "100%",
                             "height": "100%",
@@ -32,13 +32,13 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 // Start button image on top of the background
                 img(
                 [
-                        attr("src", "/static/start/start_button.png"),
+                        attr("src", "/static/background/start/Start_button_3x_scaled.png"),
                         style! {
                             "position": "absolute",
-                            "left": "45%",      // where the start button is located
-                            "top": "70%",
-                            "width": "200px",   // button size
-                            "height": "80px",
+                            "left": "35%",      // where the start button is located
+                            "top": "25%",
+                            "width": "384px",   // button size
+                            "height": "96px",
                             "cursor": "pointer",        //gives you clickable cursor
                             "image-rendering": "pixelated",
                             "z-index": "10",    // makes sure it's on top of the background image
@@ -52,7 +52,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
         }
         //later if we want to add the transition state of the button, we can just add a new msg type and another image :)
 
-        //this is the transition period between start screen and playing screen
+        //this is the transition period between start screen and playing screen (this is where the button animation will come)
         Screen::StartPressed => {
             div(
                 [
@@ -60,7 +60,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/start/start2.png"),
+                        attr("src", "/static/background/start/work_in_progress.png"),
                         style! {
                             "width": "100%",
                             "height": "100%",
@@ -73,7 +73,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
             )
         }
 
-        Screen::Playing => {
+        Screen::Playing => {        //main playing screen where player first spawns (this will maybe be bedroom)
             div(
                 [
                     on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),
@@ -89,7 +89,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     },
                 ],
                 [
-                    // Ozadje
+                    // Background
                     img(
                         vec![
                             attr("src", "/static/background/Kavarna_proba.png"),
@@ -107,9 +107,9 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         vec![],
                     ),
 
-                    // Igralec
+                    // Player
                     {
-                        let src = match player.smer {
+                        let src = match player.smer {       //we want to add different images depending on where player is facing
                             Smer::Levo => "/static/characters/lan_levo.png",
                             Smer::Desno => "/static/characters/lan_desno.png",
                             Smer::Stoji => "/static/characters/lan_naravnost.png",
