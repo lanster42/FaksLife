@@ -51,27 +51,6 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
         )
         }
 
-                // Start button image on top of the background
-                img(
-                [
-                        attr("src", "/static/background/start/Start_button_3x_scaled.png"),
-                        style! {
-                            "position": "absolute",
-                            "left": "35%",      // where the start button is located
-                            "top": "25%",
-                            "width": "384px",   // button size
-                            "height": "96px",
-                            "cursor": "pointer",        //gives you clickable cursor
-                            "image-rendering": "pixelated",
-                            "z-index": "10",    // makes sure it's on top of the background image
-                        },
-                    on_click(|_| Msg::StartPressed),  // <── simpler!
-                ],
-                [],
-            ),
-                ],
-        )
-        }
         //later if we want to add the transition state of the button, we can just add a new msg type and another image :)
 
         //this is the transition period between start screen and playing screen (this is where the button animation will come)
