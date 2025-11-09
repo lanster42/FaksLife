@@ -39,8 +39,7 @@ impl Application for Model {
 #[wasm_bindgen(start)]
 pub fn start() {
     let program = Program::mount_to_body(Model {
-        game_state: GameState::new(),
-    });
+        game_state: GameState::new(),});        //we start with a fresh gamestate. fn new is a function (in gamestate mod) that sets everything to default (ex. screen::Start)
 
     let program = Rc::new(RefCell::new(program));
 

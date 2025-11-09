@@ -47,7 +47,7 @@ impl Player {       //with this implementation we just want to CREATE a player s
     }
 
 
-    //for smoother movement let's define 
+    //for smoother movement let's define move_by
     pub fn move_by(&mut self, dx: f32, dy: f32) {
         self.x = (self.x as f32 + dx).round() as i32;   //first we transform current x position into float (from integer) and then add the new dx (which is a float) and then round the sum to the nearest integer 
         self.y = (self.y as f32 + dy).round() as i32;

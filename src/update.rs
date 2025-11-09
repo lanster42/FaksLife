@@ -5,24 +5,26 @@ use sauron::Cmd;
 use web_sys::{window, HtmlAudioElement};
 use wasm_bindgen::JsCast;
 
-pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this function will decide how to react to msgs
+pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this function will decide how to react to msgs, depending on gamestate (which because of 'mut' we can also modify), and return a command
     match msg {
-        Msg::StartPressed => {
+        Msg::StartPressed => {      //when you click Start, set gamestate screen to StartPressed
             game_state.screen = Screen::StartPressed;
-
-            Cmd::once(async {
-                gloo_timers::future::TimeoutFuture::new(300).await;
+            
+            //once executed async function:
+            Cmd::once(async {       //async is used bc ex. sleep would freeze the entire browser, async pauses the task here, but keeps the app running
+                gloo_timers::future::TimeoutFuture::new(300).await;     //how long the StartPressed transition screen stays on
                 Msg::StartFinished
             })
         }
 
         Msg::StartFinished => {
-            game_state.screen = Screen::Playing;
+            game_state.screen = Screen::Playing;        //immediately after getting the StartFinished msg, change gamestate.screen to Playing
             Cmd::none()
         }
 
         Msg::Ignore => Cmd::none(),
 
+        //receiving moving input:
         Msg::MoveLeft
         | Msg::MoveRight
         | Msg::MoveUp
@@ -30,7 +32,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
         | Msg::KeyDown(_)
         | Msg::KeyUp(_)
         | Msg::Tick => {
-            // Če igra še ni v fazi Playing, ignoriraj ostale dogodke
+            // Če igra še ni v fazi Playing, ignoriraj ostale dogodke:
             if !matches!(game_state.screen, Screen::Playing) {
                 return Cmd::none();
             }
