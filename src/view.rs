@@ -36,8 +36,28 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         }),
                     ],
                     [],
-                )],
-            )
+                ),
+
+                // Start button image on top of the background
+                img(
+                [
+                        attr("src", "/static/background/start/Start_button_3x_scaled.png"),
+                        style! {
+                            "position": "absolute",
+                            "left": "35%",      //where the start button is located
+                            "top": "25%",
+                            "width": "384px",   //button size (3x scaled since original image size is 128x32px)
+                            "height": "96px",
+                            "cursor": "pointer",        //gives you clickable cursor
+                            "image-rendering": "pixelated",
+                            "z-index": "10",    //makes sure it's on top of the background image
+                        },
+                    on_click(|_| Msg::StartPressed),
+                ],
+                [],
+            ),
+                ],
+        )
         }
 
         Screen::StartPressed => {
@@ -47,7 +67,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/start/start2.png"),
+                        attr("src", "/static/background/start/start1.png"),
                         style! {
                             "width": "100%",
                             "height": "100%",
@@ -60,12 +80,12 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
             )
         }
 
-        Screen::Playing => {
-            div(
+        Screen::Playing => {        //main playing screen where player first spawns (this will maybe be bedroom)
+            div(        //everything that has to show together when Playing event
                 [
-                    on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),
+                    on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),   //first screen where you need to listen to keyboard events
                     on_keyup(|event: KeyboardEvent| Msg::KeyUp(event.key())),
-                    attr("tabindex", "0"),
+                    attr("tabindex", "0"),      //converts value into att so the outer div receives keyboard events
                     style! {
                         "width" : "100vw",
                         "height" : "100vh",
