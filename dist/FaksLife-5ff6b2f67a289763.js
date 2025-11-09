@@ -327,14 +327,6 @@ function __wbg_get_imports() {
     imports.wbg.__wbg_clearTimeout_b2651b7485c58446 = function(arg0, arg1) {
         arg0.clearTimeout(arg1);
     };
-    imports.wbg.__wbg_clientX_5eb380a5f1fec6fd = function(arg0) {
-        const ret = arg0.clientX;
-        return ret;
-    };
-    imports.wbg.__wbg_clientY_d8b9c7f0c4e2e677 = function(arg0) {
-        const ret = arg0.clientY;
-        return ret;
-    };
     imports.wbg.__wbg_createComment_8b540d4b9d22f212 = function(arg0, arg1, arg2) {
         var v0 = getCachedStringFromWasm0(arg1, arg2);
         const ret = arg0.createComment(v0);
@@ -854,7 +846,11 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
+<<<<<<<< HEAD:dist/FaksLife-5ff6b2f67a289763.js
     imports.wbg.__wbindgen_closure_wrapper1268 = function(arg0, arg1, arg2) {
+========
+    imports.wbg.__wbindgen_closure_wrapper1263 = function(arg0, arg1, arg2) {
+>>>>>>>> fc6716a98d13461b2db413bb466b8cf632dbc051:dist/FaksLife-237580a0884a942.js
         const ret = makeClosure(arg0, arg1, 38, __wbg_adapter_22);
         return ret;
     };
