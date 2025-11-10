@@ -5,7 +5,7 @@ use std::collections::HashSet;  //used to store pressed keys
 use web_sys::window;    //so we can get the screen size
 
 
-pub enum Screen {      //defines which part of your game you're in
+pub enum Screen {      //defines which part/screen of your game you're on
     Start,
     StartPressed,   //temporary state after start button is clicked
     Playing,

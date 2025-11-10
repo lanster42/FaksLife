@@ -24,7 +24,7 @@ impl Player {       //with this implementation we just want to CREATE a player s
             y,
             smer: Smer::Stoji,
             moving: false,
-            frame: 0,
+            frame: 0,   //when we add different frames for the character movement :)
         }
     }
 
