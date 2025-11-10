@@ -24,12 +24,8 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
         Msg::Ignore => Cmd::none(),
 
-        //receiving moving input:
-        Msg::MoveLeft
-        | Msg::MoveRight
-        | Msg::MoveUp
-        | Msg::MoveDown
-        | Msg::KeyDown(_)
+        //receiving keyboard input:
+        Msg::KeyDown(_)
         | Msg::KeyUp(_)
         | Msg::Tick => {
             //if game not in screen Playing, ignore all other events:
@@ -37,12 +33,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                 return Cmd::none();
             }
 
-            match msg { //because we want smoother and diagonal movement, ignoring touch screens, this is redundant but we need to remove it from everywhere
-                Msg::MoveLeft => game_state.player.move_left(),
-                Msg::MoveRight => game_state.player.move_right(),
-                Msg::MoveUp => game_state.player.move_up(),
-                Msg::MoveDown => game_state.player.move_down(),
-
+            match msg {
                 Msg::KeyDown(key) => {
                     if !game_state.music_started {  //if music hasn't started yet, it finds the audio element and plays it
                         if let Some(win) = window() {
@@ -56,22 +47,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         }
                         game_state.music_started = true;
                     }
-
-                    //this part of the code is redundant but it lib has to stop implementing it so we can remove it
-                    game_state.pressed_keys.insert(key.clone());    
-
-                    if game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a") {
-                        game_state.player.move_left();  
-                    }
-                    if game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d") {
-                        game_state.player.move_right();
-                    }
-                    if game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w") {
-                        game_state.player.move_up();
-                    }
-                    if game_state.pressed_keys.contains("ArrowDown") || game_state.pressed_keys.contains("s") {
-                        game_state.player.move_down();
-                    }
+                    game_state.pressed_keys.insert(key.clone());
                 }
 
                 Msg::KeyUp(key) => {    //we need to remove the key when we stop holding it
@@ -86,7 +62,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
                     let mut dx = 0.0;
                     let mut dy = 0.0;
-                    if left {       //calculates the distance (if diagonal we will still need to diagonalize it)
+                    if left {       //calculates the distance (if diagonal we still need to diagonalize it)
                         dx -= 1.0;
                     }
                     if right {
@@ -99,13 +75,13 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         dy += 1.0;
                     }
 
-                    if dx != 0.0 && dy != 0.0 {     //normalizing the distance
+                    if dx != 0.0 && dy != 0.0 {     //normalizing the distance if we are moving diagonally
                         let norm = ((dx * dx + dy * dy) as f32).sqrt();
                         dx /= norm;
                         dy /= norm;     //so at this point player moves in all directions at speed 1
                     }
 
-                    let speed = 4.0;        //setting the desired speed, this might be the problematic part why the player moves slower at the start and then speeds up :')
+                    let speed = 5.0;        //setting the desired speed, this might be the problematic part why the player moves slower at the start and then speeds up :')
                     dx *= speed;
                     dy *= speed;
 
@@ -121,14 +97,14 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     } */else {
                         game_state.player.smer = Smer::Stoji;
                     }
-
+/* 
                     //this is where we set character animation :)
                     game_state.player.moving = dx != 0.0 || dy != 0.0;
                     if game_state.player.moving {   //if player pressing a movement key:
                         game_state.player.frame = (game_state.player.frame + 1) % 4;    //you cycle through 4 frames (0, 1, 2, 3)
                     } else {    //if the character isn't moving, stop cycling through the frames / stop animating
                         game_state.player.frame = 0;
-                    }
+                    } */
                 }
 
                 _ => {}

@@ -2,7 +2,7 @@ use crate::msg::Msg;
 use crate::models::gamestate::{GameState, Screen};
 use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
-use web_sys::MouseEvent;
+//use web_sys::MouseEvent;
 
 pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the curr. Gamestate
     let player = &game_state.player;
@@ -80,13 +80,13 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),   //first screen where you need to listen to keyboard events
                     on_keyup(|event: KeyboardEvent| Msg::KeyUp(event.key())),
                     attr("tabindex", "0"),      //converts value into att so the outer div receives keyboard events
-                    style! {
+                    style! {        //style of our browser window
                         "width" : "100vw",
                         "height" : "100vh",
                         "outline" : "none",
                         "overflow" : "hidden",
                         "position" : "relative",
-                        "background-color" : "black",
+                        "background-color" : "pink",
                     },
                 ],
                 [

@@ -23,21 +23,21 @@ pub struct GameState {
 
 
 //we want the game to adapt to any window size so we gather the size of the browser window screen
-fn get_screen_size() -> (i32, i32) {
+fn get_screen_size() -> (f32, f32) {
     let window = window().expect("no global `window` exists");
-    let width = window.inner_width().unwrap().as_f64().unwrap() as i32;
-    let height = window.inner_height().unwrap().as_f64().unwrap() as i32;
-    (width, height)     //returns them as integers
+    let width = window.inner_width().unwrap().as_f64().unwrap() as f32;
+    let height = window.inner_height().unwrap().as_f64().unwrap() as f32;
+    (width, height)
 }
 
 impl GameState {
     pub fn new() -> Self {      //creates a new game state, setting everything to default
         let (screen_width, screen_height) = get_screen_size();
-        let player_width = 64;
-        let player_height = 64;
+        let player_width = 64.;
+        let player_height = 64.;
 
-        let x = (screen_width / 2) - (player_width / 2);      //calculating the center of the screen so the player can start there
-        let y = (screen_height / 2) - (player_height / 2);
+        let x: f32 = (screen_width / 2.) - (player_width / 2.);      //calculating the center of the screen so the player can start there
+        let y: f32 = (screen_height / 2.) - (player_height / 2.);
 
         Self {
             player: Player::new(x, y),
