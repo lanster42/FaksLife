@@ -15,6 +15,11 @@ pub enum Screen {      //defines which part/screen of your game you're on
 
 //let's define the main struct that basically holds everything about the current game
 pub struct GameState {     
+    pub world_width: f64,    //the first 4 are for determining the size of screen
+    pub world_height: f64,
+    pub viewport_width: f64,
+    pub viewport_height: f64,
+    pub scale: f64,     //so screen size can scale
     pub player: Player,     //everything about the player
     pub pressed_keys: HashSet<String>,      //which keys are pressed
     pub music_started: bool,        //yes/no so it doesn't restart every frame
@@ -23,24 +28,27 @@ pub struct GameState {
 
 
 //we want the game to adapt to any window size so we gather the size of the browser window screen
-fn get_screen_size() -> (f32, f32) {
-    let window = window().expect("no global `window` exists");
-    let width = window.inner_width().unwrap().as_f64().unwrap() as f32;
-    let height = window.inner_height().unwrap().as_f64().unwrap() as f32;
-    (width, height)
+fn get_screen_size() -> (f64, f64) {
+    let window = window().unwrap();
+    let vw = window.inner_width().unwrap().as_f64().unwrap();
+    let vh = window.inner_height().unwrap().as_f64().unwrap();
+    (vw, vh)
 }
 
 impl GameState {
     pub fn new() -> Self {      //creates a new game state, setting everything to default
-        let (screen_width, screen_height) = get_screen_size();
-        let player_width = 64.;
-        let player_height = 64.;
-
-        let x: f32 = (screen_width / 2.) - (player_width / 2.);      //calculating the center of the screen so the player can start there
-        let y: f32 = (screen_height / 2.) - (player_height / 2.);
+        let (vw, vh) = get_screen_size();
+        let world_width = 1000.0;
+        let world_height = 800.0;
+        let scale = (vw / world_width).min(vh / world_height);      //scale so that entire world fits vertically or horizontally
 
         Self {
-            player: Player::new(x, y),
+            world_width,
+            world_height,
+            viewport_width: vw,
+            viewport_height: vh,
+            scale,
+            player: Player::new(world_width / 2.0, world_height / 2.0),
             pressed_keys: HashSet::new(),       //no keys pressed
             music_started: false,       //so the default state is no music
             screen: Screen::Start,

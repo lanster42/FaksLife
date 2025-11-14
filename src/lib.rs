@@ -44,7 +44,7 @@ pub fn start() {
     let program = Rc::new(RefCell::new(program));       //we want different pieces of code modify same program
 
     let cloned = Rc::clone(&program);       //we need to clone it otherwise it won't have it after start() finishes (lifetimes)
-    let closure = Closure::wrap(Box::new(move || {      //closure::wrap turns rust code into JS
+    let tick_closure = Closure::wrap(Box::new(move || {      //closure::wrap turns rust code into JS
         cloned.borrow_mut().dispatch(Msg::Tick);        //dispatch sends Tick message each time game updates (which means we can use it for smooth movement)
     }) as Box<dyn Fn()>);
 
@@ -52,10 +52,24 @@ pub fn start() {
     window()
         .unwrap()
         .set_interval_with_callback_and_timeout_and_arguments_0(
-            closure.as_ref().unchecked_ref(),
+            tick_closure.as_ref().unchecked_ref(),
             16,
         )
         .unwrap();
 
-    closure.forget();       //so we can keep looping start() until our game runs
+    tick_closure.forget();       //so we can keep looping start() until our game runs
+
+    let dispatch_resize = Rc::clone(&program);
+    let resize_closure = Closure::wrap(Box::new(move ||{
+        let window = web_sys::window().unwrap();
+
+        let width = window.inner_width().unwrap().as_f64().unwrap();    //catching the devices/browsers width so we can scale our screen
+        let height = window.inner_height().unwrap().as_f64().unwrap();
+
+        dispatch_resize.borrow_mut().dispatch(Msg::Resize(width, height));
+    }) as Box<dyn Fn()>);
+
+    web_sys::window().unwrap().add_event_listener_with_callback("resize", resize_closure.as_ref().unchecked_ref(),).unwrap();
+
+    resize_closure.forget();    //again preventing closing the app :)
 }

@@ -4,6 +4,8 @@ use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 //use web_sys::MouseEvent;
 
+//when we add/draw a player, obstacle or background, you need to multiply the game coordinates by the scale so it scales correctly if the screen dimensions are different:
+
 pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the curr. Gamestate
     let player = &game_state.player;
 
@@ -51,8 +53,6 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
         )
         }
 
-        //later if we want to add the transition state of the button, we can just add a new msg type and another image :)
-
         //this is the transition period between start screen and playing screen (this is where the button animation will come)
         Screen::StartPressed => {
             div(
@@ -80,9 +80,10 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),   //first screen where you need to listen to keyboard events
                     on_keyup(|event: KeyboardEvent| Msg::KeyUp(event.key())),
                     attr("tabindex", "0"),      //converts value into att so the outer div receives keyboard events
+                    attr("id", "game-root"),        //with an id we can refer to it in update
                     style! {        //style of our browser window
-                        "width" : "100vw",
-                        "height" : "100vh",
+                        "width" : format!("{}px", game_state.viewport_width),
+                        "height" : format!("{}px", game_state.viewport_height),
                         "outline" : "none",
                         "overflow" : "hidden",
                         "position" : "relative",
@@ -95,7 +96,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         vec![       //vector because the background is already a child and if we want to add ex. table separately, we can do it beside (on top of) the background by defining it as another vector :)
                             attr("src", "/static/background/Kavarna_proba.png"),
                             style! {
-                                "position" : "fixed",
+                                "position" : "absolute",
                                 "top": "50%",
                                 "left": "50%",
                                 "transform": "translate(-50%, -50%)",

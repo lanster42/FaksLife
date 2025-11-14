@@ -7,8 +7,8 @@ pub enum Smer {    //we want to first represent which direction the player is fa
 
 pub struct Player {    //we need to represent the player's state
     // pub name: String,
-    pub x: f32,    //x coordinate on screen, (0,0) is top left
-    pub y: f32,
+    pub x: f64,    //x coordinate on screen, (0,0) is top left
+    pub y: f64,
     pub smer: Smer,    //direction of facing
     //pub moving: bool,   //is player moving or not
     //pub frame: usize,   //picks the current frame
@@ -18,7 +18,7 @@ pub struct Player {    //we need to represent the player's state
 }
 
 impl Player {       //with this implementation we just want to CREATE a player starting at (x, y) with no movement and frame 0
-    pub fn new(x: f32, y: f32) -> Self {
+    pub fn new(x: f64, y: f64) -> Self {
         Player {
             x,
             y,
@@ -29,7 +29,7 @@ impl Player {       //with this implementation we just want to CREATE a player s
     }
 
     //for smoother movement let's define move_by
-    pub fn move_by(&mut self, dx: f32, dy: f32) {
+    pub fn move_by(&mut self, dx: f64, dy: f64) {
         self.x = self.x + dx;   //first we transform current x position into float (from integer) and then add the new dx (which is a float) and then round the sum to the nearest integer 
         self.y = self.y + dy;
     }

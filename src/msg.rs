@@ -7,4 +7,5 @@ pub enum Msg {
     StartPressed,       //when player clicks Start on start screen
     StartFinished,      //end of start screen to game transition
     Ignore,         //when sth happens you wanna ignore
+    Resize(f64, f64),        //we want to resize the screen if device's screen changes
 }
