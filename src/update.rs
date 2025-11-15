@@ -39,6 +39,9 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                 return Cmd::none();
             }
 
+            //on every tick we check if the screen size changed:
+            game_state.update_viewport();
+
             match msg {
                 Msg::KeyDown(key) => {
                     if !game_state.music_started {  //if music hasn't started yet, it finds the audio element and plays it

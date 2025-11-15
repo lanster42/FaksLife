@@ -1,10 +1,35 @@
 use crate::msg::Msg;
 use crate::models::gamestate::{GameState, Screen};
 use crate::models::player::Smer;
+use crate::models::player::Player;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 //use web_sys::MouseEvent;
 
 //when we add/draw a player, obstacle or background, you need to multiply the game coordinates by the scale so it scales correctly if the screen dimensions are different:
+pub fn render_player(player: &Player, scale: f64) -> Node<Msg> {
+    let x = player.x * scale;       //we want the player to scale with the screen
+    let y = player.y * scale;
+    let w = player.width * scale;
+    let h = player.height * scale;
+
+    img(
+        vec![
+            attr("src", "/static/player/player.png"),
+            style! {
+                "position": "absolute",
+                "left": format!("{}px", x),
+                "top": format!("{}px", y),
+                "width": format!("{}px", w),
+                "height": format!("{}px", h),
+                "image-rendering": "pixelated",
+                "z-index": "10",
+            },
+        ],
+        vec![],
+    )
+}
+
+
 
 pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the curr. Gamestate
     let player = &game_state.player;
@@ -82,11 +107,13 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     attr("tabindex", "0"),      //converts value into att so the outer div receives keyboard events
                     attr("id", "game-root"),        //with an id we can refer to it in update
                     style! {        //style of our browser window
-                        "width" : format!("{}px", game_state.viewport_width),
-                        "height" : format!("{}px", game_state.viewport_height),
+                        "position" : "fixed",
+                        "top" : "0",
+                        "left" : "0",
+                        "width" : "100vw",
+                        "height" : "100vh",
                         "outline" : "none",
                         "overflow" : "hidden",
-                        "position" : "relative",
                         "background-color" : "pink",
                     },
                 ],
@@ -100,8 +127,10 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 "top": "50%",
                                 "left": "50%",
                                 "transform": "translate(-50%, -50%)",
-                                "width": "1200px",
-                                "border": "3px",
+                                "width": format!("{}px", game_state.viewport_width * game_state.scale),
+                                "height": format!("{}px", game_state.viewport_height * game_state.scale),
+                               /*  "width": "1200px",       //this was the scale of the picture so I'm keeping it for now so that I can see how I need to change the background picture
+                                "border": "3px", */
                                 "z-index": "1",
                                 "image-rendering": "pixelated",
                             },
@@ -133,6 +162,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             [],
                         )
                     },
+                    render_player(&game_state.player, game_state.scale),
                 ],
             )
         }

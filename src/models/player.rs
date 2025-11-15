@@ -1,3 +1,4 @@
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]   //this is so we can print, copy, compare values of Smer
 pub enum Smer {    //we want to first represent which direction the player is facing/moving in
     Levo,
@@ -10,7 +11,8 @@ pub struct Player {    //we need to represent the player's state
     pub x: f64,    //x coordinate on screen, (0,0) is top left
     pub y: f64,
     pub smer: Smer,    //direction of facing
-    //pub moving: bool,   //is player moving or not
+    pub width: f64,
+    pub height: f64,
     //pub frame: usize,   //picks the current frame
     // pub money: u32,
     // pub attention: u32,
@@ -19,11 +21,14 @@ pub struct Player {    //we need to represent the player's state
 
 impl Player {       //with this implementation we just want to CREATE a player starting at (x, y) with no movement and frame 0
     pub fn new(x: f64, y: f64) -> Self {
+        let width = 50.0;
+        let height = 170.0;
         Player {
             x,
             y,
             smer: Smer::Stoji,
-            //moving: false,
+            width,
+            height,
             //frame: 0,   //when we add different frames for the character movement :)
         }
     }
