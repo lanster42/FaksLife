@@ -4,7 +4,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <base href="./">
     <title>FaksLife</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module">
@@ -20,7 +19,7 @@
         width: 100%;
       }
     </style>
-  <link rel="modulepreload" href="/FaksLife-ad5ae1e98555e7b0.js" crossorigin="anonymous" integrity="sha384-F0ba4Da6jKiH7YRNulnspFlg8xJMdH53dWkPH6c3wchwWM3ktiH46PqCTSRmRoT8"><link rel="preload" href="/FaksLife-ad5ae1e98555e7b0_bg.wasm" crossorigin="anonymous" integrity="sha384-pCkuElk23/NUWO1aYjwoQPsVNBeCyDkyA9niyqHRh45u079Z50mJ5TgZP5VIOhL8" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/FaksLife/FaksLife-ad5ae1e98555e7b0.js" crossorigin="anonymous" integrity="sha384-F0ba4Da6jKiH7YRNulnspFlg8xJMdH53dWkPH6c3wchwWM3ktiH46PqCTSRmRoT8"><link rel="preload" href="/FaksLife/FaksLife-ad5ae1e98555e7b0_bg.wasm" crossorigin="anonymous" integrity="sha384-pCkuElk23/NUWO1aYjwoQPsVNBeCyDkyA9niyqHRh45u079Z50mJ5TgZP5VIOhL8" as="fetch" type="application/wasm"></head>
   <body>
     <audio
   id="bg-music"
@@ -30,8 +29,8 @@
 ></audio>
   
 <script type="module">
-import init, * as bindings from '/FaksLife-ad5ae1e98555e7b0.js';
-const wasm = await init({ module_or_path: '/FaksLife-ad5ae1e98555e7b0_bg.wasm' });
+import init, * as bindings from '/FaksLife/FaksLife-ad5ae1e98555e7b0.js';
+const wasm = await init({ module_or_path: '/FaksLife/FaksLife-ad5ae1e98555e7b0_bg.wasm' });
 
 
 window.wasmBindings = bindings;
