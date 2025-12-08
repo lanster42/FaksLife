@@ -23,6 +23,7 @@ pub struct GameState {
     pub viewport_width: f64,
     pub viewport_height: f64,
     pub scale: f64,     //so screen size can scale
+    pub padding: f64,       //adding padding as a pub variable cus we need it for restricting the player
 
     //later when we have more rooms we can add a spawn point for player depending on room:
     // pub spawn_x: f64,
@@ -49,6 +50,7 @@ impl GameState {
         let world_width = 1200.0;      //how wide and high the fixed window will be
         let world_height = 600.0;       
         let scale = 1.0;
+        let padding = 10.0;
 
         Self {
             world_width,
@@ -56,6 +58,7 @@ impl GameState {
             viewport_width: vw,
             viewport_height: vh,
             scale,
+            padding,
             player: Player::new(100., 100.),        //where the player spawns, we need to change it so he spawns at the door :)
             pressed_keys: HashSet::new(),       //no keys pressed
             music_started: false,       //so the default state is no music
@@ -68,7 +71,7 @@ impl GameState {
         let (vw, vh) = get_screen_size();
 
         //we're adding "padding" AKA our container will start 10/2px from the edges of screen so it doesn't clip or scroll:
-        let padding = 10.0;
+        let padding = self.padding;
         let container_width = vw - padding;
         let container_height = vh - padding;
         let container_aspect = container_width / container_height;      //calculating the new aspect ratio

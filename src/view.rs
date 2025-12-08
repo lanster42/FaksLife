@@ -5,10 +5,10 @@ use crate::models::player::Player;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 
 //when we add/draw a player, obstacle or background, you need to multiply the game coordinates by the scale so it scales correctly if the screen dimensions are different:
-pub fn render_player(player: &Player, scale: f64) -> Node<Msg> {
-    let x = player.x * scale;       //we want the player to scale with the screen
+pub fn render_player(player: &Player, &scale: &f64) -> Node<Msg> {
+    let x = player.x * scale;       //
     let y = player.y * scale;
-    let w = player.width * scale;
+    let w = player.width * scale;       //player hight and width scaling with the screen
     let h = player.height * scale;
 
     img(
@@ -161,7 +161,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             [],
                         )
                     },
-                    render_player(&game_state.player, game_state.scale),
+                    render_player(&game_state.player, &game_state.scale),
                 ],
             )
         }

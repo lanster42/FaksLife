@@ -1,5 +1,5 @@
 use crate::models::gamestate::{GameState, Screen};
-use crate::models::player::Smer;
+use crate::models::player;
 use crate::msg::Msg;
 use sauron::Cmd;
 use web_sys::{window, HtmlAudioElement};
@@ -84,7 +84,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         dy /= norm;     //so at this point player moves in all directions at speed 1
                     }
 
-                    let speed = 5.0;        //setting the desired speed, this might be the problematic part why the player moves slower at the start and then speeds up :')
+                    let speed = 5.0;        //setting the desired speed
                     dx *= speed;
                     dy *= speed;
 
@@ -92,19 +92,19 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
                     //changing where player looks depending on movement:
                     if dx < 0.0 {
-                        game_state.player.smer = Smer::Levo;
+                        game_state.player.smer = player::Smer::Levo;
                     } else if dx > 0.0 {
-                        game_state.player.smer = Smer::Desno;
+                        game_state.player.smer = player::Smer::Desno;
                     } /* else if dy > 0.0 {
-                        gamestate.player.smer = Smer::Gor;
+                        gamestate.player.smer = player::Smer::Gor;
                     } */else {
-                        game_state.player.smer = Smer::Stoji;
+                        game_state.player.smer = player::Smer::Stoji;
                     }
-                    game_state.player.x = game_state.player.x.clamp(112., game_state.world_width /* - game_state.player.x */);
-                    game_state.player.y = game_state.player.y.clamp(0.0, game_state.world_height/*  - game_state.player.y */);
+                    game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width);
+                    game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height/*  - game_state.player.y */);
 
 /* 
-                    //this is where we set character animation :)
+                //this is if we want character animation in the future :)
                     game_state.player.moving = dx != 0.0 || dy != 0.0;
                     if game_state.player.moving {   //if player pressing a movement key:
                         game_state.player.frame = (game_state.player.frame + 1) % 4;    //you cycle through 4 frames (0, 1, 2, 3)

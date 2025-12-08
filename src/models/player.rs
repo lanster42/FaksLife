@@ -21,8 +21,8 @@ pub struct Player {    //we need to represent the player's state
 
 impl Player {       //with this implementation we just want to CREATE a player starting at (x, y) with no movement and frame 0
     pub fn new(x: f64, y: f64) -> Self {
-        let width = 50.0;
-        let height = 170.0;
+        let width = 150.0;
+        let height = 150.0;
         Player {
             x,
             y,
@@ -35,7 +35,7 @@ impl Player {       //with this implementation we just want to CREATE a player s
 
     //for smoother movement let's define move_by
     pub fn move_by(&mut self, dx: f64, dy: f64) {
-        self.x = self.x + dx;   //first we transform current x position into float (from integer) and then add the new dx (which is a float) and then round the sum to the nearest integer 
+        self.x = self.x + dx;   //moving the player in x direction
         self.y = self.y + dy;
     }
 }
