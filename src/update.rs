@@ -7,6 +7,12 @@ use wasm_bindgen::JsCast;
 
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this function will decide how to react to msgs, depending on gamestate (which because of 'mut' we can also modify), and return a command
     match msg {
+        Msg::Resize(new_w, new_h ) => {
+            game_state.viewport_width = new_w;      //we only change the view and not the world size because we don't want to keep resizing everything since it's not worth it :)
+            game_state.viewport_height = new_h;
+            game_state.scale = (new_w / game_state.world_width).min(new_h / game_state.world_height);
+            Cmd::none()     //we didn't execute anything, so we return none()
+        }
         Msg::StartPressed => {      //when you click Start, set gamestate screen to StartPressed
             game_state.screen = Screen::StartPressed;
             
@@ -32,6 +38,9 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
             if !matches!(game_state.screen, Screen::Playing) {
                 return Cmd::none();
             }
+
+            //on every tick we check if the screen size changed:
+            game_state.update_viewport();
 
             match msg {
                 Msg::KeyDown(key) => {
@@ -60,8 +69,8 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     let up = game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w");
                     let down = game_state.pressed_keys.contains("ArrowDown") || game_state.pressed_keys.contains("s");
 
-                    let mut dx = 0.0;
-                    let mut dy = 0.0;
+                    let mut dx: f64 = 0.0;
+                    let mut dy: f64 = 0.0;
                     if left {       //calculates the distance (if diagonal we still need to diagonalize it)
                         dx -= 1.0;
                     }
@@ -76,7 +85,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     }
 
                     if dx != 0.0 && dy != 0.0 {     //normalizing the distance if we are moving diagonally
-                        let norm = ((dx * dx + dy * dy) as f32).sqrt();
+                        let norm = (dx * dx + dy * dy).sqrt();
                         dx /= norm;
                         dy /= norm;     //so at this point player moves in all directions at speed 1
                     }
@@ -97,6 +106,9 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     } */else {
                         game_state.player.smer = Smer::Stoji;
                     }
+                    game_state.player.x = game_state.player.x.clamp(112., game_state.world_width /* - game_state.player.x */);
+                    game_state.player.y = game_state.player.y.clamp(0.0, game_state.world_height/*  - game_state.player.y */);
+
 /* 
                     //this is where we set character animation :)
                     game_state.player.moving = dx != 0.0 || dy != 0.0;
