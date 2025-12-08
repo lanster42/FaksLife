@@ -3,7 +3,6 @@ use crate::models::gamestate::{GameState, Screen};
 use crate::models::player::Smer;
 use crate::models::player::Player;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
-//use web_sys::MouseEvent;
 
 //when we add/draw a player, obstacle or background, you need to multiply the game coordinates by the scale so it scales correctly if the screen dimensions are different:
 pub fn render_player(player: &Player, scale: f64) -> Node<Msg> {
@@ -31,7 +30,7 @@ pub fn render_player(player: &Player, scale: f64) -> Node<Msg> {
 
 
 
-pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the curr. Gamestate
+pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the current Gamestate
     let player = &game_state.player;
 
     match game_state.screen {
@@ -127,8 +126,8 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 "top": "50%",
                                 "left": "50%",
                                 "transform": "translate(-50%, -50%)",
-                                "width": format!("{}px", game_state.viewport_width * game_state.scale),
-                                "height": format!("{}px", game_state.viewport_height * game_state.scale),
+                                "width": format!("{}px", game_state.viewport_width),
+                                "height": format!("{}px", game_state.viewport_height),
                                /*  "width": "1200px",       //this was the scale of the picture so I'm keeping it for now so that I can see how I need to change the background picture
                                 "border": "3px", */
                                 "z-index": "1",

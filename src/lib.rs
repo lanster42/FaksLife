@@ -58,18 +58,4 @@ pub fn start() {
         .unwrap();
 
     tick_closure.forget();       //so we can keep looping start() until our game runs
-
-    let dispatch_resize = Rc::clone(&program);
-    let resize_closure = Closure::wrap(Box::new(move ||{
-        let window = web_sys::window().unwrap();
-
-        let width = window.inner_width().unwrap().as_f64().unwrap();    //catching the devices/browsers width so we can scale our screen
-        let height = window.inner_height().unwrap().as_f64().unwrap();
-
-        dispatch_resize.borrow_mut().dispatch(Msg::Resize(width, height));
-    }) as Box<dyn Fn()>);
-
-    web_sys::window().unwrap().add_event_listener_with_callback("resize", resize_closure.as_ref().unchecked_ref(),).unwrap();
-
-    resize_closure.forget();    //again preventing closing the app :)
 }

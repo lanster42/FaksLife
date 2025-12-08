@@ -7,19 +7,13 @@ use wasm_bindgen::JsCast;
 
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this function will decide how to react to msgs, depending on gamestate (which because of 'mut' we can also modify), and return a command
     match msg {
-        Msg::Resize(new_w, new_h ) => {
-            game_state.viewport_width = new_w;      //we only change the view and not the world size because we don't want to keep resizing everything since it's not worth it :)
-            game_state.viewport_height = new_h;
-            game_state.scale = (new_w / game_state.world_width).min(new_h / game_state.world_height);
-            Cmd::none()     //we didn't execute anything, so we return none()
-        }
         Msg::StartPressed => {      //when you click Start, set gamestate screen to StartPressed
             game_state.screen = Screen::StartPressed;
             
             //once executed async function:
             Cmd::once(async {       //async is used bc ex. sleep would freeze the entire browser, async pauses the task here, but keeps the app running
                 gloo_timers::future::TimeoutFuture::new(300).await;     //how long the StartPressed transition screen stays on
-                Msg::StartFinished
+                Msg::StartFinished      //tell the game that the start screen has finished
             })
         }
 
@@ -56,7 +50,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         }
                         game_state.music_started = true;
                     }
-                    game_state.pressed_keys.insert(key.clone());
+                    game_state.pressed_keys.insert(key.clone());        //for now we don't really care if we insert it back or not because we're using the KeyDown and KeyUp only for music
                 }
 
                 Msg::KeyUp(key) => {    //we need to remove the key when we stop holding it
