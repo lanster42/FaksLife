@@ -13,6 +13,13 @@ pub enum Screen {      //defines which part/screen of your game you're on
     //GameOver,
 }
 
+pub struct Wall {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+}
+
 //let's define the main struct that basically holds everything about the current game
 pub struct GameState {
     //we'll be using fixed world dimensions:   
@@ -33,6 +40,7 @@ pub struct GameState {
     pub pressed_keys: HashSet<String>,      //which keys are pressed
     pub music_started: bool,        //yes/no so it doesn't restart every frame
     pub screen: Screen,     //above enum :)
+    pub walls: Vec<Wall> // stene
 }
 
 
@@ -63,6 +71,10 @@ impl GameState {
             pressed_keys: HashSet::new(),       //no keys pressed
             music_started: false,       //so the default state is no music
             screen: Screen::Start,
+                walls: vec![
+                 Wall { x: 300., y: 200., width: 200., height: 50. },
+                 Wall { x: 700., y: 400., width: 50., height: 250. },
+    ],
         }
     }
     pub fn update_viewport(&mut self) {
@@ -95,5 +107,25 @@ impl GameState {
         self.viewport_width = scaled_w;
         self.viewport_height = scaled_h;
         self.scale = scaled_w / self.world_width;       //scale = new / old;  by remembering how much we scaled the original world_width, we can scale all other objects :)
+    }
+    pub fn collides_with_wall( // preverja a se hočeš premaknit nekam kjer je stena
+        &self,
+        next_x: f64,
+        next_y: f64,
+        pw: f64,
+        ph: f64,
+    ) -> bool {
+        for wall in &self.walls {
+            let no_overlap =
+                next_x + pw <= wall.x ||           
+                next_x >= wall.x + wall.width ||   
+                next_y + ph <= wall.y ||          
+                next_y >= wall.y + wall.height;
+
+            if !no_overlap {
+                return true;    
+            }
+        }
+        false
     }
 }

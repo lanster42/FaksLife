@@ -88,7 +88,15 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     dx *= speed;
                     dy *= speed;
 
-                    game_state.player.move_by(dx, dy);      //this should be the correct implementation of the movement :)
+                    let next_x = game_state.player.x + dx;
+                    let next_y = game_state.player.y + dy;  //this should be the correct implementation of the movement :)
+
+                    let pw = game_state.player.width;
+                    let ph = game_state.player.height;
+
+                    if !game_state.collides_with_wall(next_x, next_y, pw, ph) {
+                        game_state.player.move_by(dx, dy); // premakneš se sam če ni stene tm kamor hočeš it
+                    }     
 
                     //changing where player looks depending on movement:
                     if dx < 0.0 {
