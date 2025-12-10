@@ -14,9 +14,11 @@ pub struct Player {    //we need to represent the player's state
     pub width: f64,
     pub height: f64,
     //pub frame: usize,   //picks the current frame
-    // pub money: u32,
+    pub money: i32,
+    pub max_money: i32,
     // pub attention: u32,
-    // pub anxiety: u32,
+    pub anxiety: i32,
+    pub max_anxiety: i32,
 }
 
 impl Player {       //with this implementation we just want to CREATE a player starting at (x, y) with no movement and frame 0
@@ -31,6 +33,10 @@ impl Player {       //with this implementation we just want to CREATE a player s
             width,
             height,
             //frame: 0,   //when we add different frames for the character movement :)
+            money: 100,
+            max_money: 100,
+            anxiety: 0,
+            max_anxiety: 100,
         }
     }
 
@@ -39,4 +45,17 @@ impl Player {       //with this implementation we just want to CREATE a player s
         self.x = self.x + dx;   //moving the player in x direction
         self.y = self.y + dy;
     }
+
+    pub fn spend_money(&mut self, amount: i32) {
+    self.money = (self.money - amount).max(0); // ne da se zaslužit keša idk
+}
+
+    pub fn get_less_anxious(&mut self, amount: i32) {
+    self.anxiety = (self.anxiety - amount).max(0);
+    }
+
+    pub fn get_more_anxious(&mut self, amount: i32) {
+    self.anxiety = (self.anxiety + amount).min(self.max_anxiety);
+}
+
 }
