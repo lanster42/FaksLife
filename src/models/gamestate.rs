@@ -55,7 +55,7 @@ fn get_screen_size() -> (f64, f64) {
 impl GameState {
     pub fn new() -> Self {      //creates a new game state, setting everything to default
         let (vw, vh) = get_screen_size();       //browser screen size in pixels
-        let world_width = 1200.0;      //how wide and high the fixed window will be
+        let world_width = 1200.0;      //how wide and high the fixed window will be (we're interested in the ratio)
         let world_height = 600.0;       
         let scale = 1.0;
         let padding = 10.0;
@@ -103,7 +103,7 @@ impl GameState {
             (w, h)
         };
         
-        //we can finally adjust the viewpoint (how big the screen displays on the device)
+        //we can finally adjust the viewport (how big the screen displays on the device)
         self.viewport_width = scaled_w;
         self.viewport_height = scaled_h;
         self.scale = scaled_w / self.world_width;       //scale = new / old;  by remembering how much we scaled the original world_width, we can scale all other objects :)

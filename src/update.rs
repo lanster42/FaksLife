@@ -108,6 +108,8 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     } */else {
                         game_state.player.smer = player::Smer::Stoji;
                     }
+
+                    //setting the screen boundaries AKA preventing player from moving outside of borders
                     game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width);
                     game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height/*  - game_state.player.y */);
 

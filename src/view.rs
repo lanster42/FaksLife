@@ -1,33 +1,7 @@
 use crate::msg::Msg;
 use crate::models::gamestate::{GameState, Screen};
 use crate::models::player::Smer;
-use crate::models::player::Player;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
-
-//when we add/draw a player, obstacle or background, you need to multiply the game coordinates by the scale so it scales correctly if the screen dimensions are different:
-pub fn render_player(player: &Player, &scale: &f64) -> Node<Msg> {
-    let x = player.x * scale;       //
-    let y = player.y * scale;
-    let w = player.width * scale;       //player hight and width scaling with the screen
-    let h = player.height * scale;
-
-    img(
-        vec![
-            attr("src", "/static/player/player.png"),
-            style! {
-                "position": "absolute",
-                "left": format!("{}px", x),
-                "top": format!("{}px", y),
-                "width": format!("{}px", w),
-                "height": format!("{}px", h),
-                "image-rendering": "pixelated",
-                "z-index": "10",
-            },
-        ],
-        vec![],
-    )
-}
-
 
 
 pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the current Gamestate
@@ -140,9 +114,9 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     // Player
                     {
                         let src = match player.smer {       //we want to add different images depending on where player is facing
-                            Smer::Levo => "/static/characters/lan_levo.png",
-                            Smer::Desno => "/static/characters/lan_desno.png",
-                            Smer::Stoji => "/static/characters/lan_naravnost.png",
+                            Smer::Levo => "/static/characters/lan_levo_4x.png",
+                            Smer::Desno => "/static/characters/lan_desno_4x.png",
+                            Smer::Stoji => "/static/characters/lan_naravnost_4x.png",
                         };
 
                         img(
@@ -150,10 +124,10 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 attr("src", src),
                                 style! {
                                     "position": "absolute",
-                                    "width": "150px",
-                                    "height": "150px",
-                                    "left": format!("{}px", player.x),
-                                    "top": format!("{}px", player.y),
+                                    "width": format!("{}px", player.width * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
+                                    "height": format!("{}px", player.height * game_state.scale),
+                                    "left": format!("{}px", player.x * game_state.scale),
+                                    "top": format!("{}px", player.y * game_state.scale),
                                     "z-index": "1",
                                     "image-rendering": "pixelated",
                                 },
@@ -161,7 +135,6 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             [],
                         )
                     },
-                    render_player(&game_state.player, &game_state.scale),
                 ],
             )
         }
