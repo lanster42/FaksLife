@@ -91,6 +91,75 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     },
                 ],
                 [
+// Money bar
+{
+    let ratio = player.money as f64 / player.max_money as f64; // kokšen del money bara je pobarvan 
+    let total_width = 200.0;
+    let filled_width = total_width * ratio;
+
+    div(
+        [
+            style! {
+                position: "absolute"
+                top: "30px"
+                left: "30px"
+                width: format!("{}px", total_width)
+                height: "20px"
+                background: "#493508ff"
+                border: "2px solid black"
+                z_index: 100
+            },
+        ],
+        [
+            div(
+                [
+                    style! {
+                        width: format!("{}px", filled_width)
+                        height: "100%"
+                        background: "#ffdd35ff"
+                    },
+                ],
+                [],
+            )
+        ],
+    )
+},
+
+//Anxiety bar
+
+{
+    let ratio2 = player.anxiety as f64 / player.max_anxiety as f64; // kokšen del anxiety bara je pobarvan 
+    let total_width = 200.0;
+    let filled_width = total_width * ratio2;
+
+    div(
+        [
+            style! {
+                position: "absolute"
+                top: "60px"
+                left: "30px"
+                width: format!("{}px", total_width)
+                height: "20px"
+                background: "#3f275eff"
+                border: "2px solid black"
+                z_index: 100
+            },
+        ],
+        [
+            div(
+                [
+                    style! {
+                        width: format!("{}px", filled_width)
+                        height: "100%"
+                        background: "#9335ffff"
+                    },
+                ],
+                [],
+            )
+        ],
+    )
+},
+                    
                     // Background
                     img(
                         vec![       //vector because the background is already a child and if we want to add ex. table separately, we can do it beside (on top of) the background by defining it as another vector :)
