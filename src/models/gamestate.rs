@@ -1,7 +1,8 @@
 //this is where we define the current state of our game and everything that needs to be tracked while game runs
 
 use crate::models::player::Player;
-use std::collections::HashSet;  //used to store pressed keys
+use std::collections::HashSet;
+//used to store pressed keys
 use web_sys::window;    //so we can get the screen size
 
 
@@ -89,24 +90,25 @@ impl GameState {
         let container_aspect = container_width / container_height;      //calculating the new aspect ratio
 
         //now let's change the display depending on which aspect is bigger (because we don't want to stretch our display AKA change the game_aspect):
-        let (scaled_w, scaled_h) = if game_aspect > container_aspect {      //so if container too high
+        let (scaled_w, scaled_h, new_scale) = if game_aspect > container_aspect {      //so if container too high
             let w = container_width;        //constrained by width
             let h = w / game_aspect;        //we want to always preserve the ratio
-            (w, h)
+            let s = w / self.world_width;
+            (w, h, s)
         } else if container_aspect > game_aspect {        //if container too wide
             let h = container_height;       // constrained by height
             let w = h * game_aspect;
-            (w, h)
+            let s = h / self.world_height;
+            (w, h, s)
         } else {        //so if the ratios are the same, we can just add the padding
-            let h = container_height;
-            let w = container_width;
-            (w, h)
+            (container_width, container_height, self.scale)
         };
         
         //we can finally adjust the viewport (how big the screen displays on the device)
         self.viewport_width = scaled_w;
         self.viewport_height = scaled_h;
-        self.scale = scaled_w / self.world_width;       //scale = new / old;  by remembering how much we scaled the original world_width, we can scale all other objects :)
+        self.scale = new_scale;
+        //self.scale = scaled_w / self.world_width;       //scale = new / old;  by remembering how much we scaled the original world_width, we can scale all other objects :)
     }
     pub fn collides_with_wall( // preverja a se hočeš premaknit nekam kjer je stena
         &self,

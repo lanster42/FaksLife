@@ -33,9 +33,6 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                 return Cmd::none();
             }
 
-            //on every tick we check if the screen size changed:
-            game_state.update_viewport();
-
             match msg {
                 Msg::KeyDown(key) => {
                     if !game_state.music_started {  //if music hasn't started yet, it finds the audio element and plays it
@@ -57,7 +54,10 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     game_state.pressed_keys.remove(&key);
                 }
 
-                Msg::Tick => {      //we add the key to pressed_keys (so we can monitor for more than 1 key pressed at once)
+                Msg::Tick => {
+                    game_state.update_viewport();       //on every tick we check if the screen size changed
+
+                    //we add the key to pressed_keys (so we can monitor for more than 1 key pressed at once)
                     let left = game_state.pressed_keys.contains("ArrowLeft") || game_state.pressed_keys.contains("a");
                     let right = game_state.pressed_keys.contains("ArrowRight") || game_state.pressed_keys.contains("d");
                     let up = game_state.pressed_keys.contains("ArrowUp") || game_state.pressed_keys.contains("w");
@@ -110,8 +110,8 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     }
 
                     //setting the screen boundaries AKA preventing player from moving outside of borders
-                    game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width);
-                    game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height/*  - game_state.player.y */);
+                    game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width + 0.5 * game_state.padding);
+                    game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height - game_state.player.height + 0.5 * game_state.padding);
 
 /* 
                 //this is if we want character animation in the future :)

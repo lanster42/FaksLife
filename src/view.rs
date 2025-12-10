@@ -72,7 +72,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
             )
         }
 
-        Screen::Playing => {        //main playing screen where player first spawns (this will maybe be bedroom)
+        Screen::Playing => {        //main playing screen where player first spawns (this is for now Mafija)
             div(        //everything that has to show together when Playing event
                 [
                     on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),   //first screen where you need to listen to keyboard events
@@ -102,8 +102,6 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 "transform": "translate(-50%, -50%)",
                                 "width": format!("{}px", game_state.viewport_width),
                                 "height": format!("{}px", game_state.viewport_height),
-                               /*  "width": "1200px",       //this was the scale of the picture so I'm keeping it for now so that I can see how I need to change the background picture
-                                "border": "3px", */
                                 "z-index": "1",
                                 "image-rendering": "pixelated",
                             },
