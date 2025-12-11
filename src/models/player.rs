@@ -34,27 +34,27 @@ impl Player {       //with this implementation we just want to CREATE a player s
             height,
             //frame: 0,   //when we add different frames for the character movement :)
             money: 100,
-            max_money: 100,
+            max_money: 100,    //probably better to set min_money = 0
             anxiety: 0,
             max_anxiety: 100,
         }
     }
 
     //for smoother movement let's define move_by
-    pub fn move_by(&mut self, dx: f64, dy: f64) {
-        self.x = self.x + dx;   //moving the player in x direction
-        self.y = self.y + dy;
-    }
+pub fn move_by(&mut self, dx: f64, dy: f64) {
+    self.x = self.x + dx;   //moving the player in x direction
+    self.y = self.y + dy;
+}
 
-    pub fn spend_money(&mut self, amount: i32) {
+pub fn spend_money(&mut self, amount: i32) {
     self.money = (self.money - amount).max(0); // ne da se zaslužit keša idk
 }
 
-    pub fn get_less_anxious(&mut self, amount: i32) {
+pub fn get_less_anxious(&mut self, amount: i32) {
     self.anxiety = (self.anxiety - amount).max(0);
-    }
+}
 
-    pub fn get_more_anxious(&mut self, amount: i32) {
+pub fn get_more_anxious(&mut self, amount: i32) {
     self.anxiety = (self.anxiety + amount).min(self.max_anxiety);
 }
 

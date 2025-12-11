@@ -1,5 +1,5 @@
 use crate::msg::Msg;
-use crate::models::gamestate::{GameState, Screen};
+use crate::models::gamestate::{self, GameState, Screen};
 use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 
@@ -91,74 +91,89 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     },
                 ],
                 [
-// Money bar
-{
-    let ratio = player.money as f64 / player.max_money as f64; // kokšen del money bara je pobarvan 
-    let total_width = 200.0;
-    let filled_width = total_width * ratio;
+                    // Money bar
+                    {
+                        let ratio = player.money as f64 / player.max_money as f64; // kokšen del money bara je pobarvan 
+                        let total_width = 200.0;
+                        let filled_width = total_width * ratio;
 
-    div(
-        [
-            style! {
-                position: "absolute"
-                top: "30px"
-                left: "30px"
-                width: format!("{}px", total_width)
-                height: "20px"
-                background: "#493508ff"
-                border: "2px solid black"
-                z_index: 100
-            },
-        ],
-        [
-            div(
-                [
-                    style! {
-                        width: format!("{}px", filled_width)
-                        height: "100%"
-                        background: "#ffdd35ff"
+                        div(
+                            [
+                                style! {
+                                    position: "absolute"
+                                    top: "30px"
+                                    left: "30px"
+                                    width: format!("{}px", total_width)
+                                    height: "20px"
+                                    background: "#493508ff"
+                                    border: "2px solid black"
+                                    z_index: 100
+                                },
+                            ],
+                            [
+                                div(
+                                    [
+                                        style! {
+                                            width: format!("{}px", filled_width)
+                                            height: "100%"
+                                            background: "#ffdd35ff"
+                                        },
+                                    ],
+                                    [],
+                                )
+                            ],
+                        )
                     },
-                ],
-                [],
-            )
-        ],
-    )
-},
 
-//Anxiety bar
+                    //Anxiety bar
+                    {
+                        let ratio2 = player.anxiety as f64 / player.max_anxiety as f64; // kokšen del anxiety bara je pobarvan 
+                        let total_width = 200.0;
+                        let filled_width = total_width * ratio2;
 
-{
-    let ratio2 = player.anxiety as f64 / player.max_anxiety as f64; // kokšen del anxiety bara je pobarvan 
-    let total_width = 200.0;
-    let filled_width = total_width * ratio2;
-
-    div(
-        [
-            style! {
-                position: "absolute"
-                top: "60px"
-                left: "30px"
-                width: format!("{}px", total_width)
-                height: "20px"
-                background: "#3f275eff"
-                border: "2px solid black"
-                z_index: 100
-            },
-        ],
-        [
-            div(
-                [
-                    style! {
-                        width: format!("{}px", filled_width)
-                        height: "100%"
-                        background: "#9335ffff"
+                        div(
+                            [
+                                style! {
+                                    position: "absolute"
+                                    top: "60px"
+                                    left: "30px"
+                                    width: format!("{}px", total_width)
+                                    height: "20px"
+                                    background: "#3f275eff"
+                                    border: "2px solid black"
+                                    z_index: 100
+                                },
+                            ],
+                            [
+                                div(
+                                    [
+                                        style! {
+                                            width: format!("{}px", filled_width)
+                                            height: "100%"
+                                            background: "#9335ffff"
+                                        },
+                                    ],
+                                    [],
+                                )
+                            ],
+                        )
                     },
-                ],
-                [],
-            )
-        ],
-    )
-},
+
+                    //trial interactive object (if we add images we can easily change this for now I added the square that is inside Walls at this moment :)
+                    img(
+                        vec![
+                            attr("src", "/static/background/interactive_objects/black_square.png"),
+                            style!{
+                                "position": "absolute",
+                                "left": format!("{}px", 300),
+                                "top": format!("{}px", 200),
+                                "width": format!("{}px", 200),
+                                "height": format!("{}px", 50),
+                                "z-index": "10",
+                            }
+                        ],
+                        vec![]
+                    ),
                     
                     // Background
                     img(

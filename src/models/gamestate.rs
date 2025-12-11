@@ -21,6 +21,14 @@ pub struct Wall {
     pub height: f64,
 }
 
+pub struct Item {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub image_path: String,
+}
+
 //let's define the main struct that basically holds everything about the current game
 pub struct GameState {
     //we'll be using fixed world dimensions:   
@@ -41,7 +49,8 @@ pub struct GameState {
     pub pressed_keys: HashSet<String>,      //which keys are pressed
     pub music_started: bool,        //yes/no so it doesn't restart every frame
     pub screen: Screen,     //above enum :)
-    pub walls: Vec<Wall> // stene
+    pub walls: Vec<Wall>, // stene
+    pub interactive_objects: Vec<Item>,
 }
 
 
@@ -72,10 +81,13 @@ impl GameState {
             pressed_keys: HashSet::new(),       //no keys pressed
             music_started: false,       //so the default state is no music
             screen: Screen::Start,
-                walls: vec![
-                 Wall { x: 300., y: 200., width: 200., height: 50. },
-                 Wall { x: 700., y: 400., width: 50., height: 250. },
-    ],
+            walls: vec![
+                Wall { x: 300., y: 200., width: 200., height: 50. },
+                Wall { x: 700., y: 400., width: 50., height: 250. },
+            ],
+            interactive_objects: vec![
+                Item { x: 300., y: 200., width: 200., height: 50., image_path: "static/background/interactive_objects/black_square.png".into()},
+            ]
         }
     }
     pub fn update_viewport(&mut self) {
@@ -130,4 +142,12 @@ impl GameState {
         }
         false
     }
+}
+
+//checking if player is looking at an interactive object (this is if we )
+pub fn looking_at_interactive_object(
+    //&self,
+
+) -> bool {
+    true
 }
