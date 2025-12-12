@@ -51,6 +51,43 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         game_state.music_started = true;
                     }
                     game_state.pressed_keys.insert(key.clone());        //for now we don't really care if we insert it back or not because we're using the KeyDown and KeyUp only for music
+                    
+                    //handling the Menu:
+                    if let InteractionState::MenuOpen { item_index, ref mut selection } = &mut game_state.interaction_state {
+                        match key.as_str() {
+                            "ArrowUp" | "w" | "W" => {  //because we only have 2 options everywhere (probably bad for the future) we always choose option 0 if we press arrow up or w
+                                *selection = 0;
+                            }
+                            "ArrowDown" | "s" | "S" => {
+                                *selection = 1;
+                            }
+                            "Enter" => {
+                                //applying selection effects
+                                match *selection {
+                                    0 => { /* buy coffee: change money / anxiety in game_state */ }
+                                    1 => { /* buy tortilla: change money / anxiety */ }
+                                    _ => {}
+                                }
+                                //close menu
+                                game_state.interaction_state = InteractionState::None;
+                            }
+                            "Escape" => {
+                                //cancel menu
+                                game_state.interaction_state = InteractionState::None;
+                            }
+                            _ => {}
+                        }
+                    }
+
+                    //open interaction menu on 'f' or 'F':
+                    if key == "f" || key == "F" {
+                        if let InteractionState::NearObject(idx) = game_state.interaction_state {
+                            game_state.interaction_state = InteractionState::MenuOpen {     //the starting selection is 0 (which is ex. coffee)
+                                item_index: idx,
+                                selection: 0,
+                            };
+                        }
+                    }
                 }
 
                 Msg::KeyUp(key) => {    //we need to remove the key when we stop holding it
