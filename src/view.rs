@@ -1,5 +1,5 @@
 use crate::msg::Msg;
-use crate::models::gamestate::{self, GameState, Screen};
+use crate::models::gamestate::{GameState, Screen};
 use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 

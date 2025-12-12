@@ -1,9 +1,13 @@
-use crate::models::gamestate::{GameState, Screen};
+use crate::models::gamestate::{GameState, Screen, InteractionState};
 use crate::models::player;
 use crate::msg::Msg;
 use sauron::Cmd;
 use web_sys::{window, HtmlAudioElement};
 use wasm_bindgen::JsCast;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this function will decide how to react to msgs, depending on gamestate (which because of 'mut' we can also modify), and return a command
     match msg {
@@ -32,7 +36,6 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
             if !matches!(game_state.screen, Screen::Playing) {
                 return Cmd::none();
             }
-
             match msg {
                 Msg::KeyDown(key) => {
                     if !game_state.music_started {  //if music hasn't started yet, it finds the audio element and plays it
@@ -113,6 +116,18 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width + 0.5 * game_state.padding);
                     game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height - game_state.player.height + 0.5 * game_state.padding);
 
+                    {       //we're running the proximity check directly here:
+                        let threshold = 80.0;    //how close the player needs to be
+
+                        if let Some(item_index) = game_state.player_near_item(threshold) {      //so if we detect an object, we store its index
+                            game_state.interaction_state = InteractionState::NearObject(item_index);
+                        } else {
+                            if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) {     //so only if the menu isn't opened we set the interaction state to none (so that the menu doesn't close if it's already opened)
+                                game_state.interaction_state = InteractionState::None;
+                            }
+                        }
+                    }
+                    
 /* 
                 //this is if we want character animation in the future :)
                     game_state.player.moving = dx != 0.0 || dy != 0.0;

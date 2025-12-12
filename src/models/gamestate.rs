@@ -29,6 +29,15 @@ pub struct Item {
     pub image_path: String,
 }
 
+pub enum InteractionState {     //enum for interactive items
+    None,       //when no interaction is happening
+    NearObject(usize),       //when we detect that player is near object with index n
+    MenuOpen{
+        item_index: usize,      //which object it is
+        selection: usize,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
+    }
+}
+
 //let's define the main struct that basically holds everything about the current game
 pub struct GameState {
     //we'll be using fixed world dimensions:   
@@ -51,6 +60,7 @@ pub struct GameState {
     pub screen: Screen,     //above enum :)
     pub walls: Vec<Wall>, // stene
     pub interactive_objects: Vec<Item>,
+    pub interaction_state: InteractionState,
 }
 
 
@@ -86,8 +96,9 @@ impl GameState {
                 Wall { x: 700., y: 400., width: 50., height: 250. },
             ],
             interactive_objects: vec![
-                Item { x: 300., y: 200., width: 200., height: 50., image_path: "static/background/interactive_objects/black_square.png".into()},
-            ]
+                Item { x: 300., y: 200., width: 200., height: 50., image_path: "static/background/interactive_objects/black_square.png".into() },
+            ],
+            interaction_state: InteractionState::None,
         }
     }
     pub fn update_viewport(&mut self) {
@@ -142,12 +153,25 @@ impl GameState {
         }
         false
     }
-}
+    pub fn player_near_item(&self, threshold: f64) -> Option<usize> {       //checking the proximity of the player to an item. if we're close enough (threshold), we return the index of that item. If we're not, we return None.
+        let px = self.player.x;
+        let py = self.player.y;
+        let pw = self.player.width;
+        let ph = self.player.height;
 
-//checking if player is looking at an interactive object (this is if we )
-pub fn looking_at_interactive_object(
-    //&self,
+        for (i, item) in self.interactive_objects.iter().enumerate() {
+            let cx = px + pw/2.0;
+            let cy = py + ph/2.0;
+            let ix = item.x + item.width/2.0;
+            let iy = item.y + item.height/2.0;
 
-) -> bool {
-    true
+            let dx = cx - ix;
+            let dy = cy - iy;
+
+            if (dx*dx + dy*dy).sqrt() < threshold {
+                return Some(i);     //we return the index of an item when we're close enough to it
+            }
+        }
+        None
+    }
 }
