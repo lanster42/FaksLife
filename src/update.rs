@@ -76,7 +76,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                                 //applying selection effects (choosing the option)
                                 match item_index {
                                     0 => { 
-                                        match *selection {
+                                        match *selection {      //first object (counter) has 2 options: coffee and tortilla
                                             0 => game_state.buy_coffee(),
                                             1 => game_state.buy_tortilla(),
                                             _ => {},

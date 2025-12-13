@@ -1,8 +1,7 @@
 //this is where we define the current state of our game and everything that needs to be tracked while game runs
 
 use crate::models::player::Player;
-use std::collections::HashSet;
-//used to store pressed keys
+use std::collections::HashSet;     //used to store pressed keys
 use web_sys::window;    //so we can get the screen size
 
 
@@ -22,11 +21,12 @@ pub struct Wall {
 }
 
 pub struct Item {
+    pub id: usize,
     pub x: f64,
     pub y: f64,
     pub width: f64,
     pub height: f64,
-    pub image_path: String,
+    //pub image_path: String,   only used if we have separate pngs for items (not part of the background)
 }
 
 pub enum InteractionState {     //enum for interactive items
@@ -37,11 +37,7 @@ pub enum InteractionState {     //enum for interactive items
         selection: usize,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
     }
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//INTERACTION PHASE:
 
-//pub fn buy_coffee
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //let's define the main struct that basically holds everything about the current game
 pub struct GameState {
@@ -64,7 +60,7 @@ pub struct GameState {
     pub music_started: bool,        //yes/no so it doesn't restart every frame
     pub screen: Screen,     //above enum :)
     pub walls: Vec<Wall>, // stene
-    pub interactive_objects: Vec<Item>,
+    pub interactive_items: Vec<Item>,
     pub interaction_state: InteractionState,
 }
 
@@ -100,8 +96,9 @@ impl GameState {
                 Wall { x: 300., y: 200., width: 200., height: 50. },
                 Wall { x: 700., y: 400., width: 50., height: 250. },
             ],
-            interactive_objects: vec![
-                Item { x: 300., y: 200., width: 200., height: 50., image_path: "static/background/interactive_objects/black_square.png".into() },
+            interactive_items: vec![
+                Item { id: 0, x: 300., y: 200., width: 200., height: 50. },    //counter
+                Item { id: 1, x: 700., y: 400., width: 50., height: 250. },    //bottom door
             ],
             interaction_state: InteractionState::None,
         }
@@ -164,7 +161,7 @@ impl GameState {
         let pw = self.player.width;
         let ph = self.player.height;
 
-        for (i, item) in self.interactive_objects.iter().enumerate() {
+        for (i, item) in self.interactive_items.iter().enumerate() {
             let cx = px + pw/2.0;
             let cy = py + ph/2.0;
             let ix = item.x + item.width/2.0;
@@ -182,8 +179,11 @@ impl GameState {
 
     //INTERACTIVE FUNCTIONS:
     pub fn buy_coffee(&mut self) {
-        self.player.spend_money(2);
-        self.player.get_more_anxious(5);
+        if self.player.money >= 3 {
+            self.player.spend_money(2);
+            self.player.get_more_anxious(5);
+        }
+        else {}
     }
 
     pub fn buy_tortilla(&mut self) {

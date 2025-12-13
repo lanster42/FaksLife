@@ -159,21 +159,29 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         )
                     },
 
-                    //trial interactive object (if we add images we can easily change this for now I added the square that is inside Walls at this moment :)
-                    img(
-                        vec![
-                            attr("src", "/static/background/interactive_objects/black_square.png"),
-                            style!{
-                                "position": "absolute",
-                                "left": format!("{}px", 300),
-                                "top": format!("{}px", 200),
-                                "width": format!("{}px", 200),
-                                "height": format!("{}px", 50),
-                                "z-index": "10",
-                            }
-                        ],
-                        vec![]
-                    ),
+                    //Rendering the interactive items:
+                    {// Interactive item hitboxes (invisible)
+                        div(
+                            [],
+                            game_state.interactive_items.iter().map(|item| {
+                                div(
+                                    [
+                                        style! {
+                                            "position": "absolute",
+                                            "left": format!("{}px", item.x * game_state.scale),
+                                            "top": format!("{}px", item.y * game_state.scale),
+                                            "width": format!("{}px", item.width * game_state.scale),
+                                            "height": format!("{}px", item.height * game_state.scale),
+                                            "z-index": "5",
+                                            "background": "rgba(0,0,0,0)",
+                                            "outline": "1px solid red", //when we're placing the hitbox we want to see its outlined
+                                        },
+                                    ],
+                                    [],
+                                )
+                            })
+                        )
+                    },
                     
                     // Background
                     img(
