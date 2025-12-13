@@ -37,6 +37,11 @@ pub enum InteractionState {     //enum for interactive items
         selection: usize,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
     }
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//INTERACTION PHASE:
+
+//pub fn buy_coffee
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //let's define the main struct that basically holds everything about the current game
 pub struct GameState {
@@ -173,5 +178,24 @@ impl GameState {
             }
         }
         None
+    }
+
+    //INTERACTIVE FUNCTIONS:
+    pub fn buy_coffee(&mut self) {
+        self.player.spend_money(2);
+        self.player.get_more_anxious(5);
+    }
+
+    pub fn buy_tortilla(&mut self) {
+        self.player.spend_money(5);
+        self.player.get_less_anxious(8);
+    }
+
+    pub fn smoke(&mut self) {    //smoking calms you down but maybe there's an increasing chance of having a panic attack (Game Over)
+        self.player.get_less_anxious(15);
+    }
+
+    pub fn go_home(&mut self) {
+        self.screen = Screen::Start; //this should change to /Home in the future when we draw it but now it could be /GameOver
     }
 }

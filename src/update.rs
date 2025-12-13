@@ -55,28 +55,52 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     //handling the Menu:
                     if let InteractionState::MenuOpen { item_index, ref mut selection } = &mut game_state.interaction_state {
                         match key.as_str() {
-                            "ArrowUp" | "w" | "W" => {  //because we only have 2 options everywhere (probably bad for the future) we always choose option 0 if we press arrow up or w
-                                *selection = 0;
+                            "ArrowUp" | "w" | "W" => {
+                                if *selection > 0   {    //this is so we can add more or less than 2 options at every interactive item
+                                    *selection -= 1;     //selecting upper option
+                                };
                             }
                             "ArrowDown" | "s" | "S" => {
-                                *selection = 1;
-                            }
-                            "Enter" => {
-                                //applying selection effects
-                                match *selection {
-                                    0 => { /* buy coffee: change money / anxiety in game_state */ }
-                                    1 => { /* buy tortilla: change money / anxiety */ }
-                                    _ => {}
+                                let max_index = match item_index {
+                                    0 => 1,     //item 0 has 2 options (coffee and tortilla)
+                                    1 => 1,     //item 1 has 2 options (smoke and go home)
+                                    _ => 0      //all other items for now have only 1 option
+                                };
+
+                                if *selection < max_index {
+                                    *selection += 1;
                                 }
-                                //close menu
+                            }
+
+                            "Enter" => {
+                                //applying selection effects (choosing the option)
+                                match item_index {
+                                    0 => { 
+                                        match *selection {
+                                            0 => game_state.buy_coffee(),
+                                            1 => game_state.buy_tortilla(),
+                                            _ => {},
+                                        }
+                                     }
+                                    1 => { 
+                                        match *selection {
+                                            0 => game_state.smoke(),
+                                            1 => game_state.go_home(),
+                                            _ => {},
+                                        }
+                                    }
+                                    _ => {}     //prepared for new interactable objects
+                                }
+                                //close menu after you choose
                                 game_state.interaction_state = InteractionState::None;
                             }
                             "Escape" => {
-                                //cancel menu
+                                //cancel menu whenever you press escape
                                 game_state.interaction_state = InteractionState::None;
                             }
                             _ => {}
                         }
+                        return Cmd::none(); // stop movement while menu is open
                     }
 
                     //open interaction menu on 'f' or 'F':
