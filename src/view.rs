@@ -225,6 +225,31 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             [],
                         )
                     },
+
+                    // Press F prompt
+                    if let Some(item_id) = game_state.nearby_item {
+                        let item = &game_state.interactive_items[item_id];
+
+                        img(
+                            [
+                                attr("src", "/static/background/interactive_objects/F.png"),
+                                style! {
+                                    "position": "absolute",
+                                    "left": format!("{}px", (item.x + item.width / 2.0) * game_state.scale),
+                                    "top": format!("{}px", (item.y - 20.0) * game_state.scale),
+                                    "width": format!("{}px", 41. * game_state.scale),
+                                    "height": format!("{}px", 39. * game_state.scale),
+                                    "transform": "translateX(-50%)",
+                                    "z-index": "20",
+                                    "image-rendering": "pixelated",
+                                },
+                            ],
+                            [],
+                        )
+                    } else {
+                        div([], [])     //empty node
+                    },
+
                 ],
             )
         }

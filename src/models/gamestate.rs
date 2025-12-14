@@ -31,7 +31,6 @@ pub struct Item {
 
 pub enum InteractionState {     //enum for interactive items
     None,       //when no interaction is happening
-    NearObject(usize),       //when we detect that player is near object with index n
     MenuOpen{
         item_index: usize,      //which object it is
         selection: usize,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
@@ -60,8 +59,9 @@ pub struct GameState {
     pub music_started: bool,        //yes/no so it doesn't restart every frame
     pub screen: Screen,     //above enum :)
     pub walls: Vec<Wall>, // stene
-    pub interactive_items: Vec<Item>,
-    pub interaction_state: InteractionState,
+    pub interactive_items: Vec<Item>,    //vestor of all interactive items
+    pub interaction_state: InteractionState,      //when in interaction state
+    pub nearby_item: Option<usize>,     //when we detect a nearby item with usize id
 }
 
 
@@ -101,6 +101,7 @@ impl GameState {
                 Item { id: 1, x: 700., y: 400., width: 50., height: 250. },    //bottom door
             ],
             interaction_state: InteractionState::None,
+            nearby_item: None
         }
     }
     pub fn update_viewport(&mut self) {
@@ -132,9 +133,9 @@ impl GameState {
         //we can finally adjust the viewport (how big the screen displays on the device)
         self.viewport_width = scaled_w;
         self.viewport_height = scaled_h;
-        self.scale = new_scale;
-        //self.scale = scaled_w / self.world_width;       //scale = new / old;  by remembering how much we scaled the original world_width, we can scale all other objects :)
+        self.scale = new_scale;     //scale = new / old;  by remembering how much we scaled the original world_width, we can scale all other objects :)
     }
+
     pub fn collides_with_wall( // preverja a se hočeš premaknit nekam kjer je stena
         &self,
         next_x: f64,
@@ -155,27 +156,42 @@ impl GameState {
         }
         false
     }
-    pub fn player_near_item(&self, threshold: f64) -> Option<usize> {       //checking the proximity of the player to an item. if we're close enough (threshold), we return the index of that item. If we're not, we return None.
-        let px = self.player.x;
-        let py = self.player.y;
-        let pw = self.player.width;
-        let ph = self.player.height;
 
-        for (i, item) in self.interactive_items.iter().enumerate() {
-            let cx = px + pw/2.0;
-            let cy = py + ph/2.0;
-            let ix = item.x + item.width/2.0;
-            let iy = item.y + item.height/2.0;
+    pub fn player_near_item(&self, threshold: f64) -> Option<usize> {
+        let px_min = self.player.x;
+        let px_max = self.player.x + self.player.width;
+        let py_min = self.player.y;
+        let py_max = self.player.y + self.player.height;
 
-            let dx = cx - ix;
-            let dy = cy - iy;
+        self.interactive_items
+            .iter()
+            .filter_map(|item| {
+                let ix_min = item.x;
+                let ix_max = item.x + item.width;
+                let iy_min = item.y;
+                let iy_max = item.y + item.height;
 
-            if (dx*dx + dy*dy).sqrt() < threshold {
-                return Some(i);     //we return the index of an item when we're close enough to it
-            }
-        }
-        None
-    }
+                let dx = (ix_min - px_max)
+                    .max(px_min - ix_max)
+                    .max(0.0);
+
+                let dy = (iy_min - py_max)
+                    .max(py_min - iy_max)
+                    .max(0.0);
+
+                let dist = (dx * dx + dy * dy).sqrt();
+
+                if dist <= threshold {
+                    Some((item.id, dist))
+                } else {
+                    None
+                }
+            })
+            // choose closest item if multiple are nearby
+            .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
+            .map(|(id, _)| id)
+    } 
+
 
     //INTERACTIVE FUNCTIONS:
     pub fn buy_coffee(&mut self) {

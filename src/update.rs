@@ -105,11 +105,14 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
                     //open interaction menu on 'f' or 'F':
                     if key == "f" || key == "F" {
-                        if let InteractionState::NearObject(idx) = game_state.interaction_state {
-                            game_state.interaction_state = InteractionState::MenuOpen {     //the starting selection is 0 (which is ex. coffee)
-                                item_index: idx,
-                                selection: 0,
-                            };
+                        // Only open menu if not already open
+                        if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) {
+                            if let Some(idx) = game_state.player_near_item(40.0) {
+                                game_state.interaction_state = InteractionState::MenuOpen {
+                                    item_index: idx,
+                                    selection: 0,
+                                };
+                            }
                         }
                     }
                 }
@@ -176,18 +179,10 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     //setting the screen boundaries AKA preventing player from moving outside of borders
                     game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width + 0.5 * game_state.padding);
                     game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height - game_state.player.height + 0.5 * game_state.padding);
+                    
 
-                    {       //we're running the proximity check directly here:
-                        let threshold = 80.0;    //how close the player needs to be
-
-                        if let Some(item_index) = game_state.player_near_item(threshold) {      //so if we detect an object, we store its index
-                            game_state.interaction_state = InteractionState::NearObject(item_index);
-                        } else {
-                            if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) {     //so only if the menu isn't opened we set the interaction state to none (so that the menu doesn't close if it's already opened)
-                                game_state.interaction_state = InteractionState::None;
-                            }
-                        }
-                    }
+                    //checking whether we're near enough to an interactive item:
+                    game_state.nearby_item = game_state.player_near_item(10.0);
                     
 /* 
                 //this is if we want character animation in the future :)
