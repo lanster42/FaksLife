@@ -44,7 +44,11 @@ pub struct GameState {
     pub world_width: f64,
     pub world_height: f64,
 
-    //device dimensions:
+    //browser window dimensions:
+    pub window_width: f64,
+    pub window_height: f64,
+
+    //scaled window dimensions:
     pub viewport_width: f64,
     pub viewport_height: f64,
     pub scale: f64,     //so screen size can scale
@@ -84,6 +88,8 @@ impl GameState {
         Self {
             world_width,
             world_height,
+            window_width: vw,
+            window_height: vh,
             viewport_width: vw,
             viewport_height: vh,
             scale,
@@ -95,8 +101,8 @@ impl GameState {
             walls: vec![
                 Wall { x: 300., y: 200., width: 200., height: 50. },
                 Wall { x: 700., y: 400., width: 50., height: 250. },
-                Wall { x: 1190., y: 1., width: 20., height: 600. },
-                Wall { x: 1., y: 600., width: 1200., height: 10. }
+                //Wall { x: 1190., y: 1., width: 20., height: 600. },
+                //Wall { x: 1., y: 600., width: 1200., height: 10. }
             ],
             interactive_items: vec![
                 Item { id: 0, x: 300., y: 200., width: 200., height: 50. },    //counter
@@ -110,6 +116,10 @@ impl GameState {
         //game aspect ratio:
         let game_aspect = self.world_width / self.world_height;     //because we have a fixed game, ratio is always 1200/600
         let (vw, vh) = get_screen_size();
+
+        //saving the window size so we know what the difference is (AKA where the window starts):
+        self.window_width = vw;
+        self.window_height = vh;
 
         //we're adding "padding" AKA our container will start 10/2px from the edges of screen so it doesn't clip or scroll:
         let padding = self.padding;
