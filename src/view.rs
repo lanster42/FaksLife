@@ -3,6 +3,13 @@ use crate::models::gamestate::{GameState, Screen};
 use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 
+fn menu_options_for_item(item_index: usize) -> Vec<&'static str> { // za vsak index interactive objecta ti da opcije
+    match item_index {
+        0 => vec!["kupi prijetnu kaficu", "porabi bon za tortilijo"],
+        1 => vec!["pojdi na ćik", "pojdi domov"],
+        _ => vec!["Interact"],
+    }
+}
 
 pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the current Gamestate
     let player = &game_state.player;
@@ -179,7 +186,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             // Background
                             img(
                                 vec![       //vector because the background is already a child and if we want to add ex. table separately, we can do it beside (on top of) the background by defining it as another vector :)
-                                    attr("src", "/static/background/Kavarna_proba.png"),
+                                    attr("src", "/static/background/mafija_1.png"),
                                     style! {
                                         "position" : "absolute",
                                         "top": "0px",
@@ -216,6 +223,8 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                     })
                                 )
                             },
+
+                            
 
                             // Player
                             {
@@ -267,8 +276,58 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             },
                         ],
                     ),
-                    // ====================================================
+                      // meni za interactive items           
+                if let crate::models::gamestate::InteractionState::MenuOpen {
+                    item_index,
+                    selection,
+                } = &game_state.interaction_state
+                {
+                    let options = menu_options_for_item(*item_index);
 
+                    div(
+                        [
+                            style! {
+                                "position": "absolute",
+                                "left": "50%",
+                                "top": "50%",
+                                "transform": "translate(-50%, -50%)",
+                                "background": "#2b1d12",
+                                "border": "3px solid black",
+                                "padding": "16px",
+                                "z-index": "50",
+                                "min-width": "220px",
+                                "font-family": "monospace",
+                                "color": "white",
+                            },
+                        ],
+                        options
+                            .iter()
+                            .enumerate()
+                            .map(|(i, label)| {
+                                div(
+                                    [
+                                        style! {
+                                            "padding": "6px 10px",
+                                            "margin-bottom": "4px",
+                                            "background": if i == *selection {
+                                                "#ffdd35"
+                                            } else {
+                                                "transparent"
+                                            },
+                                            "color": if i == *selection {
+                                                "black"
+                                            } else {
+                                                "white"
+                                            },
+                                        },
+                                    ],
+                                    [text(label)],
+                                )
+                            }),
+                    )
+                } else {
+                    div([], [])
+                }
 
                 ],
             )
