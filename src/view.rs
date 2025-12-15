@@ -90,7 +90,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         "height" : "100vh",
                         "outline" : "none",
                         "overflow" : "hidden",
-                        "background-color" : "pink",
+                        "background-color" : "#d5b18c",
                     },
                 ],
                 [

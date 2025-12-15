@@ -99,14 +99,14 @@ impl GameState {
             music_started: false,       //so the default state is no music
             screen: Screen::Start,
             walls: vec![
-                Wall { x: 300., y: 200., width: 200., height: 50. },
-                Wall { x: 700., y: 400., width: 50., height: 250. },
+                Wall { x: 60., y: 10., width: 390., height: 65. }, // pult
+                Wall { x: 1003., y: 595., width: 165., height: 12. }, // vrata
                 //Wall { x: 1190., y: 1., width: 20., height: 600. },
                 //Wall { x: 1., y: 600., width: 1200., height: 10. }
             ],
             interactive_items: vec![
-                Item { id: 0, x: 300., y: 200., width: 200., height: 50. },    //counter
-                Item { id: 1, x: 700., y: 400., width: 50., height: 250. },    //bottom door
+                Item { id: 0, x: 60., y: 10., width: 390., height: 65. },    //counter
+                Item { id: 1, x: 1003., y: 595., width: 165., height: 12. },    //bottom door
             ],
             interaction_state: InteractionState::None,
             nearby_item: None
