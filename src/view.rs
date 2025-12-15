@@ -73,6 +73,9 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
         }
 
         Screen::Playing => {        //main playing screen where player first spawns (this is for now Mafija)
+            let world_left = (game_state.window_width - game_state.viewport_width) / 2.0;       //calculating where the viewport starts so we can spawn the player there and also scale everything correctly
+            let world_top  = (game_state.window_height - game_state.viewport_height) / 2.0;
+
             div(        //everything that has to show together when Playing event
                 [
                     on_keydown(|event: KeyboardEvent| Msg::KeyDown(event.key())),   //first screen where you need to listen to keyboard events
@@ -160,95 +163,112 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     },
 
                     //Rendering the interactive items:
-                    {// Interactive item hitboxes (invisible)
-                        div(
-                            [],
-                            game_state.interactive_items.iter().map(|item| {
+                    // ================= WORLD CONTAINER =================
+                    div(
+                        [
+                            style! {
+                                "position": "absolute",
+                                "left": format!("{}px", world_left),
+                                "top": format!("{}px", world_top),
+                                "width": format!("{}px", game_state.viewport_width),
+                                "height": format!("{}px", game_state.viewport_height),
+                                "overflow": "hidden",     //we hide overflow so the player can't be rendered outside the world
+                            },
+                        ],
+                        [
+                            // Background
+                            img(
+                                vec![       //vector because the background is already a child and if we want to add ex. table separately, we can do it beside (on top of) the background by defining it as another vector :)
+                                    attr("src", "/static/background/Kavarna_proba.png"),
+                                    style! {
+                                        "position" : "absolute",
+                                        "top": "0px",
+                                        "left": "0px",
+                                        "width": format!("{}px", game_state.viewport_width),
+                                        "height": format!("{}px", game_state.viewport_height),
+                                        "z-index": "1",
+                                        "image-rendering": "pixelated",
+                                    },
+                                ],
+                                vec![],
+                            ),
+
+                            // Rendering the interactive items:
+                            {// Interactive item hitboxes (invisible)
                                 div(
+                                    [],
+                                    game_state.interactive_items.iter().map(|item| {
+                                        div(
+                                            [
+                                                style! {
+                                                    "position": "absolute",
+                                                    "left": format!("{}px", item.x * game_state.scale),
+                                                    "top": format!("{}px", item.y * game_state.scale),
+                                                    "width": format!("{}px", item.width * game_state.scale),
+                                                    "height": format!("{}px", item.height * game_state.scale),
+                                                    "z-index": "5",
+                                                    "background": "rgba(0,0,0,0)",
+                                                    "outline": "1px solid red", //when we're placing the hitbox we want to see its outlined
+                                                },
+                                            ],
+                                            [],
+                                        )
+                                    })
+                                )
+                            },
+
+                            // Player
+                            {
+                                let src = match player.smer {       //we want to add different images depending on where player is facing
+                                    Smer::Levo => "/static/characters/lan_levo_4x.png",
+                                    Smer::Desno => "/static/characters/lan_desno_4x.png",
+                                    Smer::Stoji => "/static/characters/lan_naravnost_4x.png",
+                                };
+
+                                img(
                                     [
+                                        attr("src", src),
                                         style! {
                                             "position": "absolute",
-                                            "left": format!("{}px", item.x * game_state.scale),
-                                            "top": format!("{}px", item.y * game_state.scale),
-                                            "width": format!("{}px", item.width * game_state.scale),
-                                            "height": format!("{}px", item.height * game_state.scale),
-                                            "z-index": "5",
-                                            "background": "rgba(0,0,0,0)",
-                                            "outline": "1px solid red", //when we're placing the hitbox we want to see its outlined
+                                            "width": format!("{}px", player.width * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
+                                            "height": format!("{}px", player.height * game_state.scale),
+                                            "left": format!("{}px", player.x * game_state.scale),
+                                            "top": format!("{}px", player.y * game_state.scale),
+                                            "z-index": "10",
+                                            "image-rendering": "pixelated",
                                         },
                                     ],
                                     [],
                                 )
-                            })
-                        )
-                    },
-                    
-                    // Background
-                    img(
-                        vec![       //vector because the background is already a child and if we want to add ex. table separately, we can do it beside (on top of) the background by defining it as another vector :)
-                            attr("src", "/static/background/mafija_1.png"),
-                            style! {
-                                "position" : "absolute",
-                                "top": "50%",
-                                "left": "50%",
-                                "transform": "translate(-50%, -50%)",
-                                "width": format!("{}px", game_state.viewport_width),
-                                "height": format!("{}px", game_state.viewport_height),
-                                "z-index": "1",
-                                "image-rendering": "pixelated",
+                            },
+
+                            // Press F prompt
+                            if let Some(item_id) = game_state.nearby_item {
+                                let item = &game_state.interactive_items[item_id];
+
+                                img(
+                                    [
+                                        attr("src", "/static/background/interactive_objects/F.png"),
+                                        style! {
+                                            "position": "absolute",
+                                            "left": format!("{}px", (item.x + item.width / 2.0) * game_state.scale),
+                                            "top": format!("{}px", (item.y - 20.0) * game_state.scale),
+                                            "width": format!("{}px", 41. * game_state.scale),
+                                            "height": format!("{}px", 39. * game_state.scale),
+                                            "transform": "translateX(-50%)",
+                                            "z-index": "20",
+                                            "image-rendering": "pixelated",
+                                        },
+                                    ],
+                                    [],
+                                )
+                            } else {
+                                div([], [])     //empty node
                             },
                         ],
-                        vec![],
                     ),
+                    // ====================================================
 
-                    // Player
-                    {
-                        let src = match player.smer {       //we want to add different images depending on where player is facing
-                            Smer::Levo => "/static/characters/lan_levo_4x.png",
-                            Smer::Desno => "/static/characters/lan_desno_4x.png",
-                            Smer::Stoji => "/static/characters/lan_naravnost_4x.png",
-                        };
-
-                        img(
-                            [
-                                attr("src", src),
-                                style! {
-                                    "position": "absolute",
-                                    "width": format!("{}px", player.width * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
-                                    "height": format!("{}px", player.height * game_state.scale),
-                                    "left": format!("{}px", player.x * game_state.scale),
-                                    "top": format!("{}px", player.y * game_state.scale),
-                                    "z-index": "1",
-                                    "image-rendering": "pixelated",
-                                },
-                            ],
-                            [],
-                        )
-                    },
-
-                    // Press F prompt
-                    if let Some(item_id) = game_state.nearby_item {
-                        let item = &game_state.interactive_items[item_id];
-
-                        img(
-                            [
-                                attr("src", "/static/background/interactive_objects/F.png"),
-                                style! {
-                                    "position": "absolute",
-                                    "left": format!("{}px", (item.x + item.width / 2.0) * game_state.scale),
-                                    "top": format!("{}px", (item.y - 20.0) * game_state.scale),
-                                    "width": format!("{}px", 41. * game_state.scale),
-                                    "height": format!("{}px", 39. * game_state.scale),
-                                    "transform": "translateX(-50%)",
-                                    "z-index": "20",
-                                    "image-rendering": "pixelated",
-                                },
-                            ],
-                            [],
-                        )
-                    } else {
-                        div([], [])     //empty node
-                    },
 
                 ],
             )

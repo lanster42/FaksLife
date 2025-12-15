@@ -177,12 +177,23 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     }
 
                     //setting the screen boundaries AKA preventing player from moving outside of borders
-                    game_state.player.x = game_state.player.x.clamp(0.5 * game_state.padding, game_state.viewport_width - game_state.player.width + 0.5 * game_state.padding);
-                    game_state.player.y = game_state.player.y.clamp(0.5 * game_state.padding, game_state.viewport_height - game_state.player.height + 0.5 * game_state.padding);
+                    let viewport_world_width  = game_state.viewport_width  / game_state.scale;
+                    let viewport_world_height = game_state.viewport_height / game_state.scale;
+
+                    game_state.player.x = game_state.player.x.clamp(
+                        0.0,
+                        viewport_world_width - game_state.player.width,
+                    );
+
+                    game_state.player.y = game_state.player.y.clamp(
+                        0.0,
+                        viewport_world_height - game_state.player.height,
+                    );
+
                     
 
                     //checking whether we're near enough to an interactive item:
-                    game_state.nearby_item = game_state.player_near_item(10.0);
+                    game_state.nearby_item = game_state.player_near_item(10.0);     //change this threshold if you want it to activate closer/further
                     
 /* 
                 //this is if we want character animation in the future :)

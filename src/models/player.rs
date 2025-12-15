@@ -23,7 +23,7 @@ pub struct Player {    //we need to represent the player's state
 
 impl Player {       //with this implementation we just want to CREATE a player starting at (x, y) with no movement and frame 0
     pub fn new(x: f64, y: f64) -> Self {
-        let image_scale = 2.0;
+        let image_scale = 2.;
         let width = 20.0 * image_scale;       //these are the dimensions of the image multiplied by a random scale (currently 2.9 bc it matches the background player lol) so if you want to change how big he is just scale it differently
         let height = 62.0 * image_scale;
         Player {
