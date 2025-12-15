@@ -87,7 +87,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         "height" : "100vh",
                         "outline" : "none",
                         "overflow" : "hidden",
-                        "background-color" : "pink",
+                        "background-color" : "#d5b18c",
                     },
                 ],
                 [
@@ -186,7 +186,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     // Background
                     img(
                         vec![       //vector because the background is already a child and if we want to add ex. table separately, we can do it beside (on top of) the background by defining it as another vector :)
-                            attr("src", "/static/background/Kavarna_proba.png"),
+                            attr("src", "/static/background/mafija_1.png"),
                             style! {
                                 "position" : "absolute",
                                 "top": "50%",
