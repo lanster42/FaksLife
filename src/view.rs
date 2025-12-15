@@ -97,7 +97,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         "height" : "100vh",
                         "outline" : "none",
                         "overflow" : "hidden",
-                        "background-color" : "#d5b18c",
+                        "background-color" : "black",       //the color of mafija background is "#d5b18c"
                     },
                 ],
                 [
