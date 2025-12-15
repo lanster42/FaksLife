@@ -95,6 +95,8 @@ impl GameState {
             walls: vec![
                 Wall { x: 300., y: 200., width: 200., height: 50. },
                 Wall { x: 700., y: 400., width: 50., height: 250. },
+                Wall { x: 1190., y: 1., width: 20., height: 600. },
+                Wall { x: 1., y: 600., width: 1200., height: 10. }
             ],
             interactive_items: vec![
                 Item { id: 0, x: 300., y: 200., width: 200., height: 50. },    //counter
