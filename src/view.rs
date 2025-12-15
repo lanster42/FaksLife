@@ -5,9 +5,10 @@ use sauron::prelude::*;         //sauron library generates the HTML structure fr
 
 fn menu_options_for_item(item_index: usize) -> Vec<&'static str> { // za vsak index interactive objecta ti da opcije
     match item_index {
-        0 => vec!["kupi prijetnu kaficu", "porabi bon za tortilijo"],
-        1 => vec!["pojdi na ćik", "pojdi domov"],
-        _ => vec!["Interact"],
+        0 => vec!["kupi prijetnu kaficu", "porabi bon za tortilijo"], // za pult
+        1 => vec!["pojdi na ćik", "pojdi domov"], // za vrata
+        2 => vec!["dober dan!!!", "zakaj si tu??"], // za npc 1
+        _ => vec!["???"],
     }
 }
 
@@ -199,6 +200,22 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 ],
                                 vec![],
                             ),
+                            // npc
+                                 img(
+                                    [
+                                        attr("src", "/static/background/interactive_objects/prijatelj2.jpg"),
+                                        style! {
+                                            "position": "absolute",
+                                            "left": format!("{}px", 500.0 * game_state.scale),  
+                                            "top": format!("{}px", 500.0 * game_state.scale),   
+                                            "width": format!("{}px", 50.0 * game_state.scale),  
+                                            "height": format!("{}px", 50.0 * game_state.scale), 
+                                            "z-index": "9",                                     
+                                            "image-rendering": "pixelated",
+                                        },
+                                    ],
+                                    vec![], 
+                                ),
 
                             // Rendering the interactive items:
                             {// Interactive item hitboxes (invisible)
@@ -219,6 +236,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                                 },
                                             ],
                                             [],
+                                            
                                         )
                                     })
                                 )
