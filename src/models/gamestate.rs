@@ -107,6 +107,7 @@ impl GameState {
             interactive_items: vec![
                 Item { id: 0, x: 60., y: 10., width: 390., height: 65. },    //counter
                 Item { id: 1, x: 1003., y: 595., width: 165., height: 12. },    //bottom door
+                Item { id: 2, x: 500., y: 500., width: 50., height: 50. }, // npc
             ],
             interaction_state: InteractionState::None,
             nearby_item: None
