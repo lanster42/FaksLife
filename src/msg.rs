@@ -9,5 +9,4 @@ pub enum Msg {
     Ignore,         //when sth happens you wanna ignore
     //InteractPressed,       //it triggers when player presses F
     SelectDialogueOption(usize),
-    CloseDialogue,
 }

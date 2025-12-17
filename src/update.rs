@@ -212,30 +212,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         game_state.player.frame = 0;
                     } */
                 }
-                Msg::SelectDialogueOption(choice_index) => {
-                    if let InteractionState::Dialogue { item_index, node_index } =
-                        &game_state.interaction_state
-                    {
-                        let dialogue = GameState::npc_dialogue(
-                            game_state.interactive_items[*item_index].id
-                        );
 
-                        let node = &dialogue[*node_index];
-                        let response = &node.responses[choice_index];
-
-                        match response.next {
-                            Some(next_index) => {
-                                game_state.interaction_state = InteractionState::Dialogue {
-                                    item_index: *item_index,
-                                    node_index: next_index,
-                                };
-                            }
-                            None => {
-                                game_state.interaction_state = InteractionState::None;
-                            }
-                        }
-                    }
-                }
 
                 _ => {}
             }
@@ -253,6 +230,12 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                 let node = &dialogue[*node_index];
                 let response = &node.responses[choice_index];
 
+                if response.end_game {
+                game_state.screen = Screen::GameOver;
+                game_state.interaction_state = InteractionState::None;
+                return Cmd::none();
+                }
+
                 match response.next {
                     Some(next_index) => {
                         game_state.interaction_state = InteractionState::Dialogue {
@@ -267,6 +250,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
             }
             return Cmd::none();
         }
- Msg::CloseDialogue => todo!()
+
     }
 }
+
