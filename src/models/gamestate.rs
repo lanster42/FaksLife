@@ -113,10 +113,16 @@ impl GameState {
             music_started: false,       //so the default state is no music
             screen: Screen::Start,
             walls: vec![
-                Wall { x: 60., y: 10., width: 390., height: 65. }, // pult
+                Wall { x: 60., y: 0., width: 390., height: 60. }, // pult
                 Wall { x: 1003., y: 595., width: 165., height: 12. }, // vrata
-                //Wall { x: 1190., y: 1., width: 20., height: 600. },
-                //Wall { x: 1., y: 600., width: 1200., height: 10. }
+                Wall { x: 50., y: 380., width: 80., height: 130. }, // miza spodaj prva
+                Wall { x: 260., y: 420., width: 70., height: 100. }, // miza spodaj druga
+                Wall { x: 440., y: 415., width: 90., height: 100. }, // miza spodaj tretja
+                Wall { x: 700., y: 370., width: 70., height: 200. }, // miza spodaj četrta
+                Wall { x: 200., y: 200., width: 100., height: 90. }, // miza zgoraj leva
+                Wall { x: 490., y: 190., width: 180., height: 90. }, // miza zgoraj desna
+                Wall { x: 500., y: 500., width: 50., height: 50. }, // ema
+                Wall { x: 800., y: 0., width: 400., height: 70. }, // pult 2
             ],
             interactive_items: vec![
                 Item { id: 0, x: 60., y: 10., width: 390., height: 65. },    //counter
@@ -393,7 +399,7 @@ pub fn npc_dialogue(item_id: usize) -> Vec<DialogueNode> {
             DialogueNode { // some(21)
                 text: "Ok, se vidiva!",
                 responses: vec![
-                    DialogueResponse { text: "Se vidiva.", next: None },  
+                    DialogueResponse { text: "Ciao.", next: None },  
                 ],
             },
             DialogueNode { // some(22)
@@ -401,20 +407,6 @@ pub fn npc_dialogue(item_id: usize) -> Vec<DialogueNode> {
                 responses: vec![
                     DialogueResponse { text: "Lahko, samo naj si grem najprej še po eno kavo.", next: Some(21) },  
                     DialogueResponse { text: "V bistvu moram zares nekam iti.", next: Some(21) }, 
-                ],
-            },
-            DialogueNode { // some()
-                text: "",
-                responses: vec![
-                    DialogueResponse { text: "", next: None },  
-                    DialogueResponse { text: "", next: None },
-                ],
-            },
-            DialogueNode { // some()
-                text: "",
-                responses: vec![
-                    DialogueResponse { text: "", next: None },  
-                    DialogueResponse { text: "", next: None },
                 ],
             },
 
