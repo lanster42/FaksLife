@@ -27,7 +27,7 @@ impl Application for Model {
     }
 
     fn view(&self) -> Node<Self::MSG> {
-        // 🔧 popravljen klic funkcije view
+        // popravljen klic funkcije view
         view(&self.game_state)
     }
 

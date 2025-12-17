@@ -5,7 +5,7 @@ use sauron::prelude::*;         //sauron library generates the HTML structure fr
 
 fn menu_options_for_item(item_index: usize) -> Vec<&'static str> { // za vsak index interactive objecta ti da opcije
     match item_index {
-        0 => vec!["kupi prijetnu kaficu", "porabi bon za tortilijo"], // za pult
+        0 => vec!["kupi prijetnu kaficu", "kupi tortilijo"], // za pult
         1 => vec!["pojdi na ćik", "pojdi domov"], // za vrata
         2 => vec!["dober dan!!!", "zakaj si tu??"], // za npc 1
         _ => vec!["???"],
@@ -111,7 +111,6 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         div(
                             [
                                 style! {
-                                    position: "absolute"
                                     top: "30px"
                                     left: "30px"
                                     width: format!("{}px", total_width)
@@ -119,6 +118,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                     background: "#493508ff"
                                     border: "2px solid black"
                                     z_index: 100
+                                    position: "relative"
                                 },
                             ],
                             [
@@ -131,7 +131,26 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                         },
                                     ],
                                     [],
-                                )
+                                ),
+                                div(
+                [
+                    style! {
+                        position: "absolute"
+                        top: "0"
+                        left: "0"
+                        width: "100%"
+                        height: "100%"
+                        display: "flex"
+                        align_items: "center"
+                        justify_content: "center"
+                        font_size: "12px"
+                        font_family: "monospace"
+                        color: "black"
+                        pointer_events: "none"
+                    },
+                ],
+                [text("denar")],
+            ),
                             ],
                         )
                     },
@@ -145,7 +164,6 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         div(
                             [
                                 style! {
-                                    position: "absolute"
                                     top: "60px"
                                     left: "30px"
                                     width: format!("{}px", total_width)
@@ -153,6 +171,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                     background: "#3f275eff"
                                     border: "2px solid black"
                                     z_index: 100
+                                    position: "relative"
                                 },
                             ],
                             [
@@ -165,8 +184,27 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                         },
                                     ],
                                     [],
-                                )
-                            ],
+                                ),
+                                div(
+                                [
+                                    style! {
+                                        position: "absolute"
+                                        top: "0"
+                                        left: "0"   
+                                        width: "100%"
+                                        height: "100%"
+                                        display: "flex"
+                                        align_items: "center"
+                                        justify_content: "center"
+                                        font_size: "12px"
+                                        font_family: "monospace"
+                                        color: "black"
+                                        pointer_events: "none"
+                                    },
+                                ],
+                                [text("anksioznost")],
+                            ),
+            ],
                         )
                     },
 

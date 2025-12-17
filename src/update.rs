@@ -202,7 +202,12 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
                     //checking whether we're near enough to an interactive item:
                     game_state.nearby_item = game_state.player_near_item(10.0);     //change this threshold if you want it to activate closer/further
-                    
+          
+                    if game_state.player.anxiety >= game_state.player.max_anxiety {
+                    game_state.screen = Screen::GameOver;
+                    game_state.interaction_state = InteractionState::None;
+                    return Cmd::none(); // konec igre če maxaš out anxiety stat
+}
 /* 
                 //this is if we want character animation in the future :)
                     game_state.player.moving = dx != 0.0 || dy != 0.0;
