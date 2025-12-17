@@ -1,17 +1,18 @@
-# FaksLife
+# MafijaLife 
 
-**FaksLife** je 2D simulacija študentskega življenja na Fakulteti za matematiko in fiziko (FMF). Igralec prevzame vlogo enega izmed več možnih likov in raziskuje znane dele fakultetne stavbe, kot so knjižnica, kavarna Mafija in učilnice.
+MafijaLife (zastarelo: FaksLife) je 2D simulacija študentove izkušnje v kavarni Mafija.
 
-## 🎮 Igranje
-- Igralec se lahko premika **levo, desno, gor in dol**.
-- Možna je interakcija z ljudmi in predmeti.
-- Na začetku igre prejme seznam opravil, ki jih mora opraviti za uspešen zaključek igre.
+Glavni igralec, Lan, lahko počne tipične stvari, kot so:
+- kupi kavo ali tortilijo
+- postane anksiozen
+- kadi tobačne zvitke, da preneha biti anksiozen
+- se pogovarja s prijateljico
 
-## 📍 Lokacije
-- **Knjižnica** – kraj za učenje in iskanje pomembnih informacij.
-- **Kavarna Mafija** – prostor za druženje in prehrano.
-- **Učilnice** – obiskovanje predavanj in opravljanje izpitov.
+ter malo manj tipične stvari, kot so:
+- ugotovi, da je izgubil spomin
+- umre zaradi srčnega napada (tbd).
 
-## 📜 Licenca
-Ta projekt je licenciran pod MIT.
+Za premikanje ter interakcijo z objekti igralec uporablja tipke s puščicami ali tipke WASD. Za 
+pogovor z NPC-ji igralec uporablja miško.
+
 
