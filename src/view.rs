@@ -1,5 +1,5 @@
 use crate::msg::Msg;
-use crate::models::gamestate::{GameState, Screen};
+use crate::models::gamestate::{GameState, Screen, InteractionState};
 use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 
@@ -294,6 +294,52 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             },
                         ],
                     ),
+
+                    if let InteractionState::Dialogue { item_index, node_index } =
+                    &game_state.interaction_state
+                {
+                    let dialogue = GameState::npc_dialogue(
+                        game_state.interactive_items[*item_index].id
+                    );
+                    let node = &dialogue[*node_index];
+
+                    div(
+                        [style! {
+                            "position": "absolute",
+                            "bottom": "20px",
+                            "left": "50%",
+                            "transform": "translateX(-50%)",
+                            "width": "600px",
+                            "background": "#222",
+                            "color": "white",
+                            "padding": "12px",
+                            "z-index": "100",
+                        }],
+                        [
+                            div([], [text(node.text)]),
+                            div(
+                                [],
+                                node.responses.iter().enumerate().map(|(i, r)| {
+                                    div(
+                                        [
+                                            on_click(move |_| Msg::SelectDialogueOption(i)),
+                                            style! {
+                                                "margin-top": "8px",
+                                                "cursor": "pointer",
+                                                "background": "#444",
+                                                "padding": "6px",
+                                            },
+                                        ],
+                                        [text(r.text)],
+                                    )
+                                }),
+                            ),
+                        ],
+                    )
+                } else {
+                    div([], [])
+                },
+
                       // meni za interactive items           
                 if let crate::models::gamestate::InteractionState::MenuOpen {
                     item_index,
