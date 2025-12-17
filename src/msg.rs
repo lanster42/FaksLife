@@ -8,4 +8,6 @@ pub enum Msg {
     StartFinished,      //end of start screen to game transition
     Ignore,         //when sth happens you wanna ignore
     //InteractPressed,       //it triggers when player presses F
+    SelectDialogueOption(usize),
+    CloseDialogue,
 }

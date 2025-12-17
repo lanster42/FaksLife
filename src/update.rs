@@ -107,15 +107,23 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     if key == "f" || key == "F" {
                         // Only open menu if not already open
                         if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) {
-                            if let Some(idx) = game_state.player_near_item(40.0) {
-                                game_state.interaction_state = InteractionState::MenuOpen {
-                                    item_index: idx,
-                                    selection: 0,
-                                };
+                            if let Some(item_index) = game_state.player_near_item(40.0) {
+                            let item = &game_state.interactive_items[item_index];
+                             if item.id == 2 {
+                                game_state.interaction_state = InteractionState::Dialogue {
+                                    item_index,
+                                    node_index: 0,
+                                 };
+                                 return Cmd::none();
                             }
+                            game_state.interaction_state = InteractionState::MenuOpen {
+                                 item_index,
+                                 selection: 0,
+                            };
                         }
                     }
                 }
+            }
 
                 Msg::KeyUp(key) => {    //we need to remove the key when we stop holding it
                     game_state.pressed_keys.remove(&key);
@@ -204,11 +212,61 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         game_state.player.frame = 0;
                     } */
                 }
+                Msg::SelectDialogueOption(choice_index) => {
+                    if let InteractionState::Dialogue { item_index, node_index } =
+                        &game_state.interaction_state
+                    {
+                        let dialogue = GameState::npc_dialogue(
+                            game_state.interactive_items[*item_index].id
+                        );
+
+                        let node = &dialogue[*node_index];
+                        let response = &node.responses[choice_index];
+
+                        match response.next {
+                            Some(next_index) => {
+                                game_state.interaction_state = InteractionState::Dialogue {
+                                    item_index: *item_index,
+                                    node_index: next_index,
+                                };
+                            }
+                            None => {
+                                game_state.interaction_state = InteractionState::None;
+                            }
+                        }
+                    }
+                }
 
                 _ => {}
             }
 
             Cmd::none()
+         },
+         Msg::SelectDialogueOption(choice_index) => {
+            if let InteractionState::Dialogue { item_index, node_index } =
+                &game_state.interaction_state
+            {
+                let dialogue = GameState::npc_dialogue(
+                    game_state.interactive_items[*item_index].id
+                );
+
+                let node = &dialogue[*node_index];
+                let response = &node.responses[choice_index];
+
+                match response.next {
+                    Some(next_index) => {
+                        game_state.interaction_state = InteractionState::Dialogue {
+                            item_index: *item_index,
+                            node_index: next_index,
+                        };
+                    }
+                    None => {
+                        game_state.interaction_state = InteractionState::None;
+                    }
+                }
+            }
+            return Cmd::none();
         }
+ Msg::CloseDialogue => todo!()
     }
 }

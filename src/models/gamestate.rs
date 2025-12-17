@@ -34,7 +34,21 @@ pub enum InteractionState {     //enum for interactive items
     MenuOpen{
         item_index: usize,      //which object it is
         selection: usize,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
-    }
+    },
+    Dialogue{
+    item_index: usize,
+    node_index: usize,
+    },
+}
+
+pub struct DialogueNode {
+    pub text: &'static str,
+    pub responses: Vec<DialogueResponse>,
+}
+
+pub struct DialogueResponse {
+    pub text: &'static str,
+    pub next: Option<usize>, // None = end conversation
 }
 
 
@@ -227,4 +241,188 @@ impl GameState {
     pub fn go_home(&mut self) {
         self.screen = Screen::Start; //this should change to /Home in the future when we draw it but now it could be /GameOver
     }
+
+pub fn npc_dialogue(item_id: usize) -> Vec<DialogueNode> {
+    match item_id {
+        2 => vec![
+            DialogueNode {
+                text: "Živjo Lan!!!",
+                responses: vec![
+                    DialogueResponse { text: "Živjo Ema!!", next: Some(18) },
+                    DialogueResponse { text: "Ema! Kaj delaš tukaj?", next: Some(1) },
+                    DialogueResponse { text: "Kdo si ti?", next: Some(10) },
+                ],
+            },
+            DialogueNode { // some(1)
+                text: "Ah, saj veš, morala bi delat projektno nalogo za Programiranje 2, ampak raje sedim tu in pijem kavo.",
+                responses: vec![
+                    DialogueResponse { text: "Jebem ti mater, Ema, zakaj samo jaz delam to projektno??.", next: Some(2) },
+                    DialogueResponse { text: "Uživaj, življenje je kratko.", next: Some(5) },
+                ],
+            },
+            DialogueNode { // some(2)
+                text: "Oprosti!!! :( Obljubim, da bom jutri zares začela!",
+                responses: vec![
+                    DialogueResponse { text: "V redu je, oprostim ti.", next: Some(3) },  
+                    DialogueResponse { text: "Ne oprostim ti.", next: Some(4) },
+                ],
+            },
+            DialogueNode { //some(3)
+                text: "Hvala, Lan! Sem vedela, da se lahko zanesem nate. <3",
+                responses: vec![
+                    DialogueResponse { text: "Ni za kaj. Zdaj pa pojdi delat!!!", next: None },
+                ],
+            },
+            DialogueNode { // some(4)
+                text: "Ok :(",
+                responses: vec![
+                    DialogueResponse { text: "Saj sem se samo hecal.", next: Some(3) },  
+                    DialogueResponse { text: "Zdaj bom šel stran, ker te ne maram.", next: None },
+                ],
+            },
+             DialogueNode { // some(5)
+                text: "Ti si tako pameten! Kaj slabega pa bi se sploh lahko zgodilo, če odlagam vse svoje delo do zadnjega trenutka?",
+                responses: vec![
+                    DialogueResponse { text: "Morda bova zaradi tega dobila slabšo oceno.", next: Some(6) }, 
+                    DialogueResponse { text: "Dobesedno nič.", next: Some(7) },
+                ],
+            },
+            DialogueNode { // some(6)
+                text: "Ne, to se gotovo ne bo zgodilo, saj bom jaz zadnji dan pred rokom napisala tako dober NPC dialog, da bova še vseeno dobila 10.",
+                responses: vec![
+                    DialogueResponse { text: "Uau, kako dobra ideja, to bo gotovo delovalo!.", next: Some(7) }, 
+                    DialogueResponse { text: "Ema, to se ne bo zgodilo.", next: Some(8) },
+                ],
+            },
+            DialogueNode { // some(7)
+                text: "Hvala, Lan, ti si moj največji podpornik!",
+                responses: vec![
+                    DialogueResponse { text: "Itak, da sem. No, uživaj, moram it.", next: None },  
+                ],
+            },
+            DialogueNode { // some(8)
+                text: "Ok :(",
+                responses: vec![
+                    DialogueResponse { text: "Saj sem se samo hecal.", next: Some(7) }, 
+                    DialogueResponse { text: "Zdaj bom šel stran, ker te ne maram.", next: None },
+                ],
+            },
+            DialogueNode { // some(9)
+                text: "Uf, še dobro. Tole je bilo zdaj malo čudno. A se počutiš v redu?",
+                responses: vec![
+                    DialogueResponse { text: "Ja.", next: Some(17) },  //tuki bi blo zabavn če se ti pokaže drgačn response če je tvoj anxiety too high
+                    DialogueResponse { text: "Ne, zelo se mi vrti, mislim, da bom omedlel.", next: Some(12) },
+                ],
+            },
+            DialogueNode { // some(10)
+                text: "Lan? A si v redu? Jaz sem Ema, tvoja prijateljica!",
+                responses: vec![
+                    DialogueResponse { text: "Ah, seveda, saj res.", next: Some(9) }, 
+                    DialogueResponse { text: "Kaj? Prvič slišim zate.", next: Some(11) },
+                ],
+            },
+            DialogueNode { // some(11)
+                text: "Lan?? Mar si izgubil spomin? Ali veš, kdo si in kje si?",
+                responses: vec![
+                    DialogueResponse { text: "Ja, jaz sem Lan in sem v Mafiji, vsega se spomnem normalno, samo tebe ne. Povej mi več o sebi.", next: Some(13) },
+                    DialogueResponse { text: "V bistvu ne...", next: Some(14) },
+                ],
+            },
+            DialogueNode { // some(12)
+                text: "Poklicala bom rešilca",
+                responses: vec![
+                    DialogueResponse { text: "Ok.", next: None },  // tukaj je potem game over
+                ],
+            },
+            DialogueNode { // some(13)
+                text: "Jaz sem Ema, spoznala sva se na FMF, kjer sva sošolca že dve leti. Povsod sediva skupaj. Z Borom imamo tekaški klub. Skupaj delava projektno za Programiranje 2...",
+                responses: vec![
+                    DialogueResponse { text: "Ah, seveda, saj res.", next: Some(9) },  
+                    DialogueResponse { text: "To ni mogoče, spomnim se, da sem celo projektno za Programiranje 2 napisal sam.", next: Some(15) }, 
+                    DialogueResponse { text: "Kdo je Bor?", next: Some(14) },
+                ],
+            },
+            DialogueNode { // some(14)
+                text: "Lan!! Res si izgubil spomin!! Poklicala bom rešilca.",
+                responses: vec![
+                    DialogueResponse { text: "Mogoče je tako res bolje.", next: None },  //spet game over
+                ],
+            },
+             DialogueNode { // some(15)
+                text: "Ej! A se me v bistvu spomneš, in me samo zafrkavaš, ker se ti zdi, da sem premalo naredila?",
+                responses: vec![
+                    DialogueResponse { text: "Ja.", next: Some(16) },  
+                    DialogueResponse { text: "Ne, res ne vem, kdo naj bi ti bila.", next: Some(14) },
+                ],
+            },
+            DialogueNode { // some(16)
+                text: "Ej!! To pa ni res!! Jaz sem naredila en commit na readme-ju!!",
+                responses: vec![
+                    DialogueResponse { text: "To mi nič ne pomeni.", next: Some(2) },  
+                    DialogueResponse { text: "Prav imaš. V bistvu si super soprogramerka.", next: Some(3) },
+                ],
+            },
+            DialogueNode { // some(17)
+                text: "Lepo slišat! Kaj pa počenjaš tu?",
+                responses: vec![
+                    DialogueResponse { text: "Pijem kavo in hodim okrog.", next: Some(22) },
+                    DialogueResponse { text: "V bistvu sem hotel iti stran od tebe.", next: Some(19) },
+                ],
+            },
+            DialogueNode { // some(18)
+                text: "Kaj počenjaš tu?",
+                responses: vec![
+                    DialogueResponse { text: "Pijem kavo in hodim okrog.", next: Some(22) }, 
+                    DialogueResponse { text: "V bistvu sem hotel iti stran od tebe.", next: Some(19) },
+                ],
+            },
+            DialogueNode { // some(19)
+                text: "Ok :(",
+                responses: vec![
+                    DialogueResponse { text: "Saj sem se samo hecal.", next: Some(20) },
+                    DialogueResponse { text: "Zdaj bom šel stran, ker te ne maram.", next: None },
+                ],
+            },
+            DialogueNode { // some(20)
+                text: "Ah, si me že prestrašil. Boš prisedel?",
+                responses: vec![
+                    DialogueResponse { text: "Lahko, samo naj si grem najprej še po eno kavo.", next: Some(21) },  
+                    DialogueResponse { text: "V bistvu moram zares nekam iti.", next: Some(21) }, 
+                ],
+            },
+            DialogueNode { // some(21)
+                text: "Ok, se vidiva!",
+                responses: vec![
+                    DialogueResponse { text: "Se vidiva.", next: None },  
+                ],
+            },
+            DialogueNode { // some(22)
+                text: "Oh, to ravno počnem tudi jaz, samo da sedim, namesto stojim. Boš prisedel?",
+                responses: vec![
+                    DialogueResponse { text: "Lahko, samo naj si grem najprej še po eno kavo.", next: Some(21) },  
+                    DialogueResponse { text: "V bistvu moram zares nekam iti.", next: Some(21) }, 
+                ],
+            },
+            DialogueNode { // some()
+                text: "",
+                responses: vec![
+                    DialogueResponse { text: "", next: None },  
+                    DialogueResponse { text: "", next: None },
+                ],
+            },
+            DialogueNode { // some()
+                text: "",
+                responses: vec![
+                    DialogueResponse { text: "", next: None },  
+                    DialogueResponse { text: "", next: None },
+                ],
+            },
+
+
+        ],
+        _ => vec![],
+    }
+}
+
+
 }
