@@ -241,12 +241,12 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             // npc
                                  img(
                                     [
-                                        attr("src", "/static/characters/ema_naravnost.png",),
+                                        attr("src", "/static/characters/ema_naravnost_2.png",),
                                         style! {
                                             "position": "absolute",
-                                            "left": format!("{}px", 500.0 * game_state.scale),      //og dimenzije so 18 x 62
+                                            "left": format!("{}px", 500.0 * game_state.scale),      //og dimenzije so 24 x 62
                                             "top": format!("{}px", 500.0 * game_state.scale),   
-                                            "width": format!("{}px", 18.0 * game_state.scale),  
+                                            "width": format!("{}px", 24.0 * game_state.scale),  
                                             "height": format!("{}px", 62.0 * game_state.scale), 
                                             "z-index": "9",                                     
                                             "image-rendering": "pixelated",
@@ -378,7 +378,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     div([], [])
                 },
 
-                      // meni za interactive items           
+                    // meni za interactive items           
                 if let crate::models::gamestate::InteractionState::MenuOpen {
                     item_index,
                     selection,
@@ -455,7 +455,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     [],
                 ),
 
-                // Press To Start Over image on top of the background
+                //Press To Start Over image on top of the background
                 img(
                 [
                         attr("src", "/static/background/start_over_button.png"),
@@ -469,7 +469,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             "image-rendering": "pixelated",
                             "z-index": "10",   
                         },
-                    on_click(|_| Msg::Menu),
+                    on_click(|_| Msg::Menu),    //if you press this button, the screen changes to Menu AKA starting screen
                 ],
                 [],
             ),
