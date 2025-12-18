@@ -23,7 +23,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/background/start/start1.png"),        //start screen background image
+                        attr("src", "/static/background/start/sunset_start.png"),        //start screen background image
                         style! {
                             "width": "100%",
                             "height": "100%",
@@ -40,13 +40,13 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 // Start button image on top of the background
                 img(
                 [
-                        attr("src", "/static/background/start/Start_button_3x_scaled.png"),
+                        attr("src", "/static/background/start/start_game.png"),
                         style! {
                             "position": "absolute",
-                            "left": "35%",      //where the start button is located
-                            "top": "25%",
-                            "width": "384px",   //button size (3x scaled since original image size is 128x32px)
-                            "height": "96px",
+                            "width": format!("{}px", 300. * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
+                            "height": format!("{}px", 180. * game_state.scale),
+                            "left": format!("{}px", (game_state.window_width - 300.) * 0.5 * game_state.scale),
+                            "top": format!("{}px", (game_state.window_height - 350.) * 0.5 * game_state.scale),    //originalne dimenzije te slike so 75 x 45
                             "cursor": "pointer",        //gives you clickable cursor
                             "image-rendering": "pixelated",
                             "z-index": "10",    //makes sure it's on top of the background image
@@ -67,7 +67,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/background/start/start1.png"),
+                        attr("src", "/static/background/start/sunset_start.png"),
                         style! {
                             "width": "100%",
                             "height": "100%",
@@ -241,13 +241,13 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             // npc
                                  img(
                                     [
-                                        attr("src", "/static/background/interactive_objects/prijatelj2.jpg"),
+                                        attr("src", "/static/characters/ema_naravnost.png",),
                                         style! {
                                             "position": "absolute",
-                                            "left": format!("{}px", 500.0 * game_state.scale),  
+                                            "left": format!("{}px", 500.0 * game_state.scale),      //og dimenzije so 18 x 62
                                             "top": format!("{}px", 500.0 * game_state.scale),   
-                                            "width": format!("{}px", 50.0 * game_state.scale),  
-                                            "height": format!("{}px", 50.0 * game_state.scale), 
+                                            "width": format!("{}px", 18.0 * game_state.scale),  
+                                            "height": format!("{}px", 62.0 * game_state.scale), 
                                             "z-index": "9",                                     
                                             "image-rendering": "pixelated",
                                         },
@@ -270,7 +270,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                                     "height": format!("{}px", item.height * game_state.scale),
                                                     "z-index": "5",
                                                     "background": "rgba(0,0,0,0)",
-                                                    "outline": "1px solid red", //when we're placing the hitbox we want to see its outlined
+                                                    //"outline": "1px solid red", //when we're placing the hitbox we want to see its outlined
                                                 },
                                             ],
                                             [],
@@ -455,21 +455,21 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     [],
                 ),
 
-                // Start button image on top of the background
+                // Press To Start Over image on top of the background
                 img(
                 [
-                        attr("src", "/static/background/start/Start_button_3x_scaled.png"),
+                        attr("src", "/static/background/start_over_button.png"),
                         style! {
                             "position": "absolute",
-                            "left": "37%",      
-                            "top": "80%",
-                            "width": "384px",   
-                            "height": "96px",
+                            "width": format!("{}px", 1144. * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
+                            "height": format!("{}px", 80. * game_state.scale),
+                            "left": format!("{}px", (game_state.window_width - 1144.) * 0.5 * game_state.scale),
+                            "top": format!("{}px", (game_state.window_height - 140.) * 0.5 * game_state.scale),    //originalne dimenzije te slike so 286 x 20
                             "cursor": "pointer",        
                             "image-rendering": "pixelated",
                             "z-index": "10",   
                         },
-                    on_click(|_| Msg::StartPressed),
+                    on_click(|_| Msg::Menu),
                 ],
                 [],
             ),

@@ -34,7 +34,7 @@ impl Player {       //with this implementation we just want to CREATE a player s
             height,
             //frame: 0,   //when we add different frames for the character movement :)
             money: 100,
-            max_money: 100,    //probably better to set min_money = 0
+            max_money: 100,
             anxiety: 0,
             max_anxiety: 100,
         }

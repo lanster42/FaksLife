@@ -1,4 +1,4 @@
-use crate::models::gamestate::{GameState, Screen, InteractionState};
+use crate::models::gamestate::{GameState, InteractionState, Screen};
 use crate::models::player;
 use crate::msg::Msg;
 use sauron::Cmd;
@@ -13,6 +13,8 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
     match msg {
         Msg::StartPressed => {      //when you click Start, set gamestate screen to StartPressed
             game_state.screen = Screen::StartPressed;
+            game_state.player.money = game_state.player.max_money;      //this resets the player's parameters after game over otherwise the game remembers how much money and anxiety you had at game over 
+            game_state.player.anxiety = 0;
             
             //once executed async function:
             Cmd::once(async {       //async is used bc ex. sleep would freeze the entire browser, async pauses the task here, but keeps the app running
@@ -27,6 +29,11 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
         }
 
         Msg::Ignore => Cmd::none(),
+        
+        Msg::Menu => {
+            game_state.screen = Screen::Start;        //immediately after getting the StartFinished msg, change gamestate.screen to Playing
+            Cmd::none()
+        }
 
         //receiving keyboard input:
         Msg::KeyDown(_)
