@@ -46,7 +46,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             "width": format!("{}px", 300. * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
                             "height": format!("{}px", 180. * game_state.scale),
                             "left": format!("{}px", (game_state.window_width - 300.) * 0.5 * game_state.scale),
-                            "top": format!("{}px", (game_state.window_height - 350.) * 0.5 * game_state.scale),    //originalne dimenzije te slike so 75 x 45
+                            "top": format!("{}px", (game_state.window_height - 220.) * 0.5 * game_state.scale),    //originalne dimenzije te slike so 75 x 45
                             "cursor": "pointer",        //gives you clickable cursor
                             "image-rendering": "pixelated",
                             "z-index": "10",    //makes sure it's on top of the background image
@@ -216,8 +216,8 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 "position": "absolute",
                                 "left": format!("{}px", world_left),
                                 "top": format!("{}px", world_top),
-                                "width": format!("{}px", game_state.viewport_width),
-                                "height": format!("{}px", game_state.viewport_height),
+                                "width": format!("{}px", game_state.world_width * game_state.scale),
+                                "height": format!("{}px", game_state.world_height * game_state.scale),
                                 "overflow": "hidden",     //we hide overflow so the player can't be rendered outside the world
                             },
                         ],
@@ -448,8 +448,9 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             "object-fit": "cover",      
                             "image-rendering": "pixelated",     
                             "position": "absolute",
-                            "top": "0"
-                            "left": "0"
+                            "top": "200"
+                            "left": "1000"
+                            "background": "#000000",
                         },
                     ],
                     [],
@@ -461,10 +462,10 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         attr("src", "/static/background/start_over_button.png"),
                         style! {
                             "position": "absolute",
-                            "width": format!("{}px", 1144. * game_state.scale),      //we're multiplying player's dims and position with scale bc we want to scale it with the window
-                            "height": format!("{}px", 80. * game_state.scale),
-                            "left": format!("{}px", (game_state.window_width - 1144.) * 0.5 * game_state.scale),
-                            "top": format!("{}px", (game_state.window_height - 140.) * 0.5 * game_state.scale),    //originalne dimenzije te slike so 286 x 20
+                            "width": format!("{}px", 700. * game_state.scale),      
+                            "height": format!("{}px", 60. * game_state.scale),
+                            "left": format!("{}px", (game_state.window_width - 900.) * 0.5 * game_state.scale),
+                            "top": format!("{}px", (game_state.window_height - 200.) * 0.5 * game_state.scale),    //originalne dimenzije te slike so 286 x 20
                             "cursor": "pointer",        
                             "image-rendering": "pixelated",
                             "z-index": "10",   
