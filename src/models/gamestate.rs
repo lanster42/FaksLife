@@ -195,7 +195,7 @@ impl GameState {
         let px_min = self.player.x;
         let px_max = self.player.x + self.player.width;
         let py_min = self.player.y;
-        let py_max = self.player.y + self.player.height;
+        let py_max = self.player.y + self.player.height; // pravokotnik v katerem je igralec
 
         self.interactive_items
             .iter()
@@ -203,7 +203,7 @@ impl GameState {
                 let ix_min = item.x;
                 let ix_max = item.x + item.width;
                 let iy_min = item.y;
-                let iy_max = item.y + item.height;
+                let iy_max = item.y + item.height; // za vsak item, pravokotnik tega itema
 
                 let dx = (ix_min - px_max)
                     .max(px_min - ix_max)
@@ -213,10 +213,10 @@ impl GameState {
                     .max(py_min - iy_max)
                     .max(0.0);
 
-                let dist = (dx * dx + dy * dy).sqrt();
+                let dist = (dx * dx + dy * dy).sqrt(); // razdalja od igralca do itemov
 
                 if dist <= threshold {
-                    Some((item.id, dist))
+                    Some((item.id, dist)) // če si dovolj blizu ti vrne some(item, sicer none)
                 } else {
                     None
                 }
@@ -248,6 +248,16 @@ impl GameState {
     pub fn go_home(&mut self) {
         self.screen = Screen::GameOver; //this should change to /Home in the future when we draw it but now it could be /GameOver
     }
+
+    pub fn menu_options_for_item(item_index: usize) -> Vec<&'static str> { // za vsak index interactive objecta ti da opcije
+    match item_index {
+        0 => vec!["kupi prijetnu kaficu", "kupi tortilijo"], // za pult
+        1 => vec!["pojdi na ćik", "pojdi domov"], // za vrata
+        2 => vec!["dober dan!!!", "zakaj si tu??"], // za npc 1
+        _ => vec!["???"],
+    }
+}
+
 
 pub fn npc_dialogue(item_id: usize) -> Vec<DialogueNode> {
     match item_id {
