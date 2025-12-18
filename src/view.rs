@@ -244,10 +244,10 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                         attr("src", "/static/characters/ema_naravnost_2.png",),
                                         style! {
                                             "position": "absolute",
-                                            "left": format!("{}px", 500.0 * game_state.scale),      //og dimenzije so 24 x 62
-                                            "top": format!("{}px", 500.0 * game_state.scale),   
-                                            "width": format!("{}px", 24.0 * game_state.scale),  
-                                            "height": format!("{}px", 62.0 * game_state.scale), 
+                                            "left": format!("{}px", 530.0 * game_state.scale),      //og dimenzije so 24 x 62
+                                            "top": format!("{}px", 450.0 * game_state.scale),   
+                                            "width": format!("{}px", 24.0 * 1.95 *  game_state.scale),  
+                                            "height": format!("{}px", 62.0 * 1.95 * game_state.scale), 
                                             "z-index": "9",                                     
                                             "image-rendering": "pixelated",
                                         },

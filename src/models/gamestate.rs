@@ -122,13 +122,13 @@ impl GameState {
                 Wall { x: 700., y: 370., width: 70., height: 200. }, // miza spodaj četrta
                 Wall { x: 200., y: 200., width: 100., height: 90. }, // miza zgoraj leva
                 Wall { x: 490., y: 190., width: 180., height: 90. }, // miza zgoraj desna
-                Wall { x: 500., y: 500., width: 50., height: 50. }, // ema
+                Wall { x: 530., y: 450., width: 36., height: 124. }, // ema
                 Wall { x: 800., y: 0., width: 400., height: 70. }, // pult 2
             ],
             interactive_items: vec![
                 Item { id: 0, x: 60., y: 10., width: 390., height: 65. },    //counter
                 Item { id: 1, x: 1003., y: 595., width: 165., height: 12. },    //bottom door
-                Item { id: 2, x: 500., y: 500., width: 18., height: 62. }, // npc
+                Item { id: 2, x: 530., y: 450., width: 36., height: 124.}, // npc
             ],
             interaction_state: InteractionState::None,
             nearby_item: None
