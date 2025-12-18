@@ -441,7 +441,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 ],
                 [img(
                     [
-                        attr("src", "/static/background/game_over.png"),        
+                        attr("src", "/static/background/game_over_screen.png"),        
                         style! {
                             "width": "100%",
                             "height": "100%",
