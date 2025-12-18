@@ -113,7 +113,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     //open interaction menu on 'f' or 'F':
                     if key == "f" || key == "F" {
                         // Only open menu if not already open
-                        if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) {
+                        if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) { 
                             if let Some(item_index) = game_state.player_near_item(40.0) {
                             let item = &game_state.interactive_items[item_index];
                              if item.id == 2 {

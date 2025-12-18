@@ -3,15 +3,6 @@ use crate::models::gamestate::{GameState, Screen, InteractionState};
 use crate::models::player::Smer;
 use sauron::prelude::*;         //sauron library generates the HTML structure from the RUST code :)
 
-fn menu_options_for_item(item_index: usize) -> Vec<&'static str> { // za vsak index interactive objecta ti da opcije
-    match item_index {
-        0 => vec!["kupi prijetnu kaficu", "kupi tortilijo"], // za pult
-        1 => vec!["pojdi na ćik", "pojdi domov"], // za vrata
-        2 => vec!["dober dan!!!", "zakaj si tu??"], // za npc 1
-        _ => vec!["???"],
-    }
-}
-
 pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will describe what should be shown for the current Gamestate
     let player = &game_state.player;
 
@@ -133,24 +124,24 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                     [],
                                 ),
                                 div(
-                [
-                    style! {
-                        position: "absolute"
-                        top: "0"
-                        left: "0"
-                        width: "100%"
-                        height: "100%"
-                        display: "flex"
-                        align_items: "center"
-                        justify_content: "center"
-                        font_size: "12px"
-                        font_family: "monospace"
-                        color: "black"
-                        pointer_events: "none"
-                    },
-                ],
-                [text("denar")],
-            ),
+                                    [
+                                        style! {
+                                            position: "absolute"
+                                            top: "0"
+                                            left: "0"
+                                            width: "100%"
+                                            height: "100%"
+                                            display: "flex"
+                                            align_items: "center"
+                                            justify_content: "center"
+                                            font_size: "12px"
+                                            font_family: "monospace"
+                                            color: "black"
+                                            pointer_events: "none"
+                                        },
+                                    ],
+                                    [text("denar")],
+                                ),
                             ],
                         )
                     },
@@ -204,7 +195,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 ],
                                 [text("anksioznost")],
                             ),
-            ],
+                           ],
                         )
                     },
 
@@ -332,7 +323,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             },
                         ],
                     ),
-
+                    // npc dialogue
                     if let InteractionState::Dialogue { item_index, node_index } =
                     &game_state.interaction_state
                 {
@@ -384,7 +375,7 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                     selection,
                 } = &game_state.interaction_state
                 {
-                    let options = menu_options_for_item(*item_index);
+                    let options = GameState::menu_options_for_item(*item_index);
 
                     div(
                         [
