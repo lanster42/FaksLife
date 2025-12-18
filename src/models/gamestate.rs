@@ -263,7 +263,7 @@ pub fn npc_dialogue(item_id: usize) -> Vec<DialogueNode> {
             DialogueNode { // some(1)
                 text: "Ah, saj veš, morala bi delat projektno nalogo za Programiranje 2, ampak raje sedim tu in pijem kavo.",
                 responses: vec![
-                    DialogueResponse { text: "Jebem ti mater, Ema, zakaj samo jaz delam to projektno??.", next: Some(2), end_game: false },
+                    DialogueResponse { text: "J***m ti mater, Ema, zakaj samo jaz delam to projektno??.", next: Some(2), end_game: false },
                     DialogueResponse { text: "Uživaj, življenje je kratko.", next: Some(5), end_game: false },
                 ],
             },

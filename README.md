@@ -15,4 +15,5 @@ ter malo manj tipične stvari, kot so:
 Za premikanje ter interakcijo z objekti igralec uporablja tipke s puščicami ali tipke WASD. Za 
 pogovor z NPC-ji igralec uporablja miško.
 
+Za začetek igre je potrebno klikniti na gumb "start game" in potem še enkrat klikniti kamorkoli na zaslon.
 
