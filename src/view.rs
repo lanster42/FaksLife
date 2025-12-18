@@ -216,8 +216,8 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 "position": "absolute",
                                 "left": format!("{}px", world_left),
                                 "top": format!("{}px", world_top),
-                                "width": format!("{}px", game_state.viewport_width),
-                                "height": format!("{}px", game_state.viewport_height),
+                                "width": format!("{}px", game_state.world_width * game_state.scale),
+                                "height": format!("{}px", game_state.world_height * game_state.scale),
                                 "overflow": "hidden",     //we hide overflow so the player can't be rendered outside the world
                             },
                         ],
