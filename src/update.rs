@@ -1,4 +1,4 @@
-use crate::models::gamestate::{GameState, InteractionState, Screen};
+use crate::models::gamestate::{GameState, InteractionState, Screen, DialogueNodes, DialogueOutcome};
 use crate::models::player;
 use crate::msg::Msg;
 use sauron::Cmd;
@@ -107,25 +107,25 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                             }
                             _ => {}
                         }
-                        return Cmd::none(); // stop movement while menu is open
+                        return Cmd::none(); //stop movement while menu is open
                     }
 
                     //open interaction menu on 'f' or 'F':
                     if key == "f" || key == "F" {
-                        // Only open menu if not already open
+                        //only open menu if not already open
                         if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) { 
-                            if let Some(item_index) = game_state.player_near_item(40.0) {
+                            if let Some(item_index) = game_state.player_near_item(10.0) {
                             let item = &game_state.interactive_items[item_index];
-                             if item.id == 2 {
-                                game_state.interaction_state = InteractionState::Dialogue {
+                             if item.id == 2 {      //if we're talking to the only npc we have for now
+                                game_state.interaction_state = InteractionState::Dialogue {     //we enter dialogue mode
                                     item_index,
-                                    node_index: 0,
+                                    node: DialogueNodes::Živjo,
                                  };
                                  return Cmd::none();
                             }
-                            game_state.interaction_state = InteractionState::MenuOpen {
+                            game_state.interaction_state = InteractionState::MenuOpen {     //otherwise we're near an interactive item
                                  item_index,
-                                 selection: 0,
+                                 selection: 0,      //we start from the first item
                             };
                         }
                     }
@@ -211,10 +211,10 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     game_state.nearby_item = game_state.player_near_item(10.0);     //change this threshold if you want it to activate closer/further
           
                     if game_state.player.anxiety >= game_state.player.max_anxiety {
-                    game_state.screen = Screen::GameOver;
-                    game_state.interaction_state = InteractionState::None;
-                    return Cmd::none(); // konec igre če maxaš out anxiety stat
-}
+                        game_state.screen = Screen::GameOver;
+                        game_state.interaction_state = InteractionState::None;
+                        return Cmd::none(); // konec igre če maxaš out anxiety stat
+                    }
 /* 
                 //this is if we want character animation in the future :)
                     game_state.player.moving = dx != 0.0 || dy != 0.0;
@@ -231,38 +231,45 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
             Cmd::none()
          },
-         Msg::SelectDialogueOption(choice_index) => {
-            if let InteractionState::Dialogue { item_index, node_index } =
+        Msg::SelectDialogueOption(choice_index) => {
+            if let InteractionState::Dialogue { item_index, node } =
                 &game_state.interaction_state
             {
                 let dialogue = GameState::npc_dialogue(
-                    game_state.interactive_items[*item_index].id
+                    game_state.interactive_items[*item_index].id,
                 );
 
-                let node = &dialogue[*node_index];
-                let response = &node.responses[choice_index];
+                let current_node = match dialogue.get(node) {
+                    Some(n) => n,
+                    None => {
+                        game_state.interaction_state = InteractionState::None;
+                        return Cmd::none();
+                    }
+                };
 
-                if response.end_game {
-                game_state.screen = Screen::GameOver;
-                game_state.interaction_state = InteractionState::None;
-                return Cmd::none();
-                }
+                let response = &current_node.responses[choice_index];
 
-                match response.next {
-                    Some(next_index) => {
+                match &response.outcome {
+                    DialogueOutcome::Continue(next_node) => {
                         game_state.interaction_state = InteractionState::Dialogue {
                             item_index: *item_index,
-                            node_index: next_index,
+                            node: *next_node,
                         };
                     }
-                    None => {
+
+                    DialogueOutcome::EndDialogue => {
+                        game_state.interaction_state = InteractionState::None;
+                    }
+
+                    DialogueOutcome::EndGame => {
+                        game_state.screen = Screen::GameOver;
                         game_state.interaction_state = InteractionState::None;
                     }
                 }
             }
-            return Cmd::none();
-        }
 
+            Cmd::none()
+        }
     }
 }
 

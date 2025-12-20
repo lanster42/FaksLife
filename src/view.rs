@@ -237,8 +237,8 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                             "position": "absolute",
                                             "left": format!("{}px", 530.0 * game_state.scale),      //og dimenzije so 24 x 62
                                             "top": format!("{}px", 450.0 * game_state.scale),   
-                                            "width": format!("{}px", 24.0 * 1.95 *  game_state.scale),  
-                                            "height": format!("{}px", 62.0 * 1.95 * game_state.scale), 
+                                            "width": format!("{}px", 24.0 * 1.5 *  game_state.scale),  
+                                            "height": format!("{}px", 62.0 * 1.5 * game_state.scale), 
                                             "z-index": "9",                                     
                                             "image-rendering": "pixelated",
                                         },
@@ -324,13 +324,19 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                         ],
                     ),
                     // npc dialogue
-                    if let InteractionState::Dialogue { item_index, node_index } =
+                    if let InteractionState::Dialogue { item_index, node } =
                     &game_state.interaction_state
                 {
                     let dialogue = GameState::npc_dialogue(
-                        game_state.interactive_items[*item_index].id
+                        game_state.interactive_items[*item_index].id,
                     );
-                    let node = &dialogue[*node_index];
+                    let current_node = match dialogue.get(node) {
+                            Some(n) => n,
+                            None => {
+                                // dialogue graph is invalid or ended — render nothing
+                                return div(vec![], vec![]);
+                            }
+                        };
 
                     div(
                         [style! {
@@ -345,10 +351,10 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                             "z-index": "100",
                         }],
                         [
-                            div([], [text(node.text)]),
+                            div([], [text(current_node.text)]),
                             div(
                                 [],
-                                node.responses.iter().enumerate().map(|(i, r)| {
+                                current_node.responses.iter().enumerate().map(|(i, r)| {
                                     div(
                                         [
                                             on_click(move |_| Msg::SelectDialogueOption(i)),
