@@ -1,6 +1,7 @@
 //this is where we define the current state of our game and everything that needs to be tracked while game runs
 
 use crate::models::player::Player;
+use crate::models::interactable::{Interactable, NpcId, Objects};
 use std::collections::HashSet;     //used to store pressed keys
 use std::collections::HashMap;     //used to store dialogue nodes
 use web_sys::window;    //so we can get the screen size
@@ -21,8 +22,8 @@ pub struct Wall {
     pub height: f64,
 }
 
-pub struct Item {
-    pub id: usize,
+pub struct Item {       //interactive items
+    pub kind: Interactable,
     pub x: f64,
     pub y: f64,
     pub width: f64,
@@ -33,28 +34,48 @@ pub struct Item {
 pub enum InteractionState {     //enum for interactive items
     None,       //when no interaction is happening
     MenuOpen{
-        item_index: usize,      //which object it is
-        selection: usize,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
+        interactable: Interactable,      //which object it is
+        selection: MenuOption,       //options at object n (AKA 0 = coffee, 1 = tortilla / 0 = smoke, 1 = go home / 0 = study, 1 = go to class)
     },
     Dialogue{
-    item_index: usize,
-    node: DialogueNodes,
+        npc: NpcId,
+        node: DialogueNodes,
     },
 }
 
-pub struct DialogueNode {
-    pub text: &'static str,
-    pub responses: Vec<DialogueResponse>,
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum MenuOption {       //all possible menu options we have
+    Coffee,
+    Tortilla,
+    Smoke,
+    GoHome,
+}
+
+impl MenuOption {
+    pub fn label(&self) -> &'static str {    //labels for menu options we want to show on screen
+        match self {
+            MenuOption::Coffee => "Buy coffee",
+            MenuOption::Tortilla => "Buy tortilla",
+            MenuOption::Smoke => "Smoke",
+            MenuOption::GoHome => "Go home",
+        }
+    }
+}
+
+
+pub struct DialogueNode {       
+    pub text: &'static str,     //what the npc says at current node
+    pub responses: Vec<DialogueResponse>,       //which options we have at curr node
 }
 
 pub struct DialogueResponse {
-    pub text: &'static str,     //which node we're at
-    pub outcome: DialogueOutcome,       //what's the outcome after we choose an answer
+    pub text: &'static str,     //what answer we choose (AKA which edge we choose)
+    pub outcome: DialogueOutcome,       //what's the outcome after we choose that answer (AKA to which node we move next)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 //enum for dialogue options:
-pub enum DialogueNodes {
+pub enum DialogueNodes {     //start of every npc line
     Živjo,
     AhSajVes,
     Oprosti,
@@ -80,7 +101,7 @@ pub enum DialogueNodes {
     OhToRavno,
 }
 
-pub enum DialogueOutcome {
+pub enum DialogueOutcome {      //outcomes that can happen after a dialogue option is chosen
     Continue(DialogueNodes),
     EndDialogue,
     EndGame,
@@ -114,7 +135,7 @@ pub struct GameState {
     pub walls: Vec<Wall>, // stene
     pub interactive_items: Vec<Item>,    //vestor of all interactive items
     pub interaction_state: InteractionState,      //when in interaction state
-    pub nearby_item: Option<usize>,     //when we detect a nearby item with usize id
+    pub nearby_item: Option<Interactable>,     //when we detect a nearby item with usize id
 }
 
 
@@ -160,9 +181,9 @@ impl GameState {
                 Wall { x: 800., y: 0., width: 400., height: 70. }, // pult 2
             ],
             interactive_items: vec![
-                Item { id: 0, x: 60., y: 10., width: 390., height: 65. },    //counter
-                Item { id: 1, x: 1003., y: 595., width: 165., height: 12. },    //bottom door
-                Item { id: 2, x: 530., y: 450., width: 36., height: 124.}, // npc
+                Item { kind: Interactable::Object(Objects::Counter), x: 60., y: 10., width: 390., height: 65. },    //counter
+                Item { kind: Interactable::Object(Objects::Door), x: 1003., y: 595., width: 165., height: 12. },    //bottom door
+                Item { kind: Interactable::Npc(NpcId::Ema), x: 530., y: 450., width: 36., height: 124.}, // Ema as npc has item_id 2
             ],
             interaction_state: InteractionState::None,
             nearby_item: None
@@ -225,11 +246,11 @@ impl GameState {
         false
     }
 
-    pub fn player_near_item(&self, threshold: f64) -> Option<usize> {
+    pub fn player_near_item(&self, threshold: f64) -> Option<Interactable> {
         let px_min = self.player.x;
         let px_max = self.player.x + self.player.width;
         let py_min = self.player.y;
-        let py_max = self.player.y + self.player.height; // pravokotnik v katerem je igralec
+        let py_max = self.player.y + self.player.height;
 
         self.interactive_items
             .iter()
@@ -237,7 +258,7 @@ impl GameState {
                 let ix_min = item.x;
                 let ix_max = item.x + item.width;
                 let iy_min = item.y;
-                let iy_max = item.y + item.height; // za vsak item, pravokotnik tega itema
+                let iy_max = item.y + item.height;
 
                 let dx = (ix_min - px_max)
                     .max(px_min - ix_max)
@@ -247,18 +268,18 @@ impl GameState {
                     .max(py_min - iy_max)
                     .max(0.0);
 
-                let dist = (dx * dx + dy * dy).sqrt(); // razdalja od igralca do itemov
+                let dist = (dx * dx + dy * dy).sqrt();
 
                 if dist <= threshold {
-                    Some((item.id, dist)) // če si dovolj blizu ti vrne some(item, sicer none)
+                    Some((item.kind, dist))
                 } else {
                     None
                 }
             })
-            // choose closest item if multiple are nearby
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
-            .map(|(id, _)| id)
-    } 
+            .map(|(interactable, _)| interactable)
+    }
+ 
 
 
     //INTERACTIVE FUNCTIONS:
@@ -283,31 +304,31 @@ impl GameState {
         self.screen = Screen::GameOver; //this should change to /Home in the future when we draw it but now it could be /GameOver
     }
 
-    pub fn menu_options_for_item(item_index: usize) -> Vec<&'static str> { // za vsak index interactive objecta ti da opcije
-    match item_index {
-        0 => vec!["kupi prijetnu kaficu", "kupi tortilijo"], // za pult
-        1 => vec!["pojdi na ćik", "pojdi domov"], // za vrata
-        2 => vec!["dober dan!!!", "zakaj si tu??"], // za npc 1
-        _ => vec!["???"],
+    pub fn menu_options_for_item(interactable: Interactable) -> Vec<MenuOption> {    //only handling the menu items here (not dialogue or anything)
+        match interactable {
+            Interactable::Object(Objects::Counter) => vec![MenuOption::Coffee, MenuOption::Tortilla],        //the null object still remains to be the counter
+            Interactable::Object(Objects::Door) => vec![MenuOption::Smoke, MenuOption::GoHome],       //the first interactive object is the door
+            _ => vec![],
+        }
     }
-}
 
 
-pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
-    let mut map = HashMap::new();
 
-    match item_id {
-        2 => {
-            map.insert(     //0
-                DialogueNodes::Živjo,
+pub fn npc_dialogue(npc: NpcId) -> HashMap<DialogueNodes, DialogueNode> {       //we instead opt now for a hash map because vectors are usually used when we have something ordered (linearly) which isn't the case here since we have kind of like a directed graph (which isn't ordered)
+    let mut map = HashMap::new();   //initiating a new hashmap
+
+    match npc {
+        NpcId::Ema => {      //now that we only have one npc this isn't really important but when we add more we can match with other item_ids
+            map.insert(
+                DialogueNodes::Živjo,   //node label
                 DialogueNode {
-                    text: "Živjo Lan!!!",
+                    text: "Živjo Lan!!!",   //text under node label
                     responses: vec![
-                        DialogueResponse {
-                            text: "Živjo Ema!!",
-                            outcome: DialogueOutcome::Continue(DialogueNodes::KajPočenjaš),
+                        DialogueResponse {      //top most response option
+                            text: "Živjo Ema!!",    //text it shows for this option
+                            outcome: DialogueOutcome::Continue(DialogueNodes::KajPočenjaš),     //what the outcome is if you choose it
                         },
-                        DialogueResponse {
+                        DialogueResponse {      //second most top response option
                             text: "Ema! Kaj delaš tukaj?",
                             outcome: DialogueOutcome::Continue(DialogueNodes::AhSajVes),
                         },
@@ -319,7 +340,7 @@ pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
                 },
             );
 
-            map.insert(     //1
+            map.insert(
                 DialogueNodes::AhSajVes,
                 DialogueNode {
                     text: "Ah, saj veš, morala bi delat projektno nalogo za Programiranje 2, ampak raje sedim tu in pijem kavo.",
@@ -544,7 +565,7 @@ pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
 
             map.insert(
                 DialogueNodes::KajPočenjaš,
-                DialogueNode { // some(18)
+                DialogueNode {
                     text: "Kaj počenjaš tu?",
                     responses: vec![
                         DialogueResponse { text: "Pijem kavo in hodim okrog.", outcome: DialogueOutcome::Continue(DialogueNodes::OhToRavno)}, 
@@ -555,7 +576,7 @@ pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
 
             map.insert(
                 DialogueNodes::Ok3,
-                DialogueNode { // some(19)
+                DialogueNode {
                     text: "Ok :(((",
                     responses: vec![
                         DialogueResponse { text: "Saj sem se samo hecal.", outcome: DialogueOutcome::Continue(DialogueNodes::AhSiMeŽerestrašil)},
@@ -566,7 +587,7 @@ pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
 
             map.insert(
                 DialogueNodes::AhSiMeŽerestrašil,
-                DialogueNode { // some(20)
+                DialogueNode {
                     text: "Ah, si me že prestrašil. Boš prisedel?",
                     responses: vec![
                         DialogueResponse { text: "Lahko, samo naj si grem najprej še po eno kavo.", outcome: DialogueOutcome::Continue(DialogueNodes::OkSeVidiva)},  
@@ -577,7 +598,7 @@ pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
 
             map.insert(
                 DialogueNodes::OkSeVidiva,
-                DialogueNode { // some(21)
+                DialogueNode {
                     text: "Ok, se vidiva!",
                     responses: vec![
                         DialogueResponse { text: "Ciao.", outcome: DialogueOutcome::EndDialogue},  
@@ -587,7 +608,7 @@ pub fn npc_dialogue(item_id: usize) -> HashMap<DialogueNodes, DialogueNode> {
 
             map.insert(
                 DialogueNodes::OhToRavno,
-                DialogueNode { // some(22)
+                DialogueNode {
                     text: "Oh, to ravno počnem tudi jaz, samo da sedim, namesto stojim. Boš prisedel?",
                     responses: vec![
                         DialogueResponse { text: "Lahko, samo naj si grem najprej še po eno kavo.", outcome: DialogueOutcome::Continue(DialogueNodes::OkSeVidiva)},  

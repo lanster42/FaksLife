@@ -1,11 +1,10 @@
-use crate::models::gamestate::{GameState, InteractionState, Screen, DialogueNodes, DialogueOutcome};
+use crate::models::gamestate::{GameState, InteractionState, Screen, DialogueNodes, DialogueOutcome, MenuOption};
+use crate::models::interactable::{Interactable, Objects, NpcId};
 use crate::models::player;
 use crate::msg::Msg;
 use sauron::Cmd;
 use web_sys::{window, HtmlAudioElement};
 use wasm_bindgen::JsCast;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,80 +56,82 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                         }
                         game_state.music_started = true;
                     }
-                    game_state.pressed_keys.insert(key.clone());        //for now we don't really care if we insert it back or not because we're using the KeyDown and KeyUp only for music
+                    game_state.pressed_keys.insert(key.clone());
                     
-                    //handling the Menu:
-                    if let InteractionState::MenuOpen { item_index, ref mut selection } = &mut game_state.interaction_state {
-                        match key.as_str() {
-                            "ArrowUp" | "w" | "W" => {
-                                if *selection > 0   {    //this is so we can add more or less than 2 options at every interactive item
-                                    *selection -= 1;     //selecting upper option
-                                };
-                            }
-                            "ArrowDown" | "s" | "S" => {
-                                let max_index = match item_index {
-                                    0 => 1,     //item 0 has 2 options (coffee and tortilla)
-                                    1 => 1,     //item 1 has 2 options (smoke and go home)
-                                    _ => 0      //all other items for now have only 1 option
-                                };
+            //Handling the Menu:
+            if let InteractionState::MenuOpen { interactable, selection } =
+                &mut game_state.interaction_state {
+                let options = GameState::menu_options_for_item(*interactable);      //get the menu options for this interactable object or NPC
+                let current_index = options     //find the index of the current selection in the options
+                    .iter()
+                    .position(|opt| opt == selection)
+                    .unwrap_or(0);
 
-                                if *selection < max_index {
-                                    *selection += 1;
-                                }
-                            }
-
-                            "Enter" => {
-                                //applying selection effects (choosing the option)
-                                match item_index {
-                                    0 => { 
-                                        match *selection {      //first object (counter) has 2 options: coffee and tortilla
-                                            0 => game_state.buy_coffee(),
-                                            1 => game_state.buy_tortilla(),
-                                            _ => {},
-                                        }
-                                     }
-                                    1 => { 
-                                        match *selection {
-                                            0 => game_state.smoke(),
-                                            1 => game_state.go_home(),
-                                            _ => {},
-                                        }
-                                    }
-                                    _ => {}     //prepared for new interactable objects
-                                }
-                                //close menu after you choose
-                                game_state.interaction_state = InteractionState::None;
-                            }
-                            "Escape" => {
-                                //cancel menu whenever you press escape
-                                game_state.interaction_state = InteractionState::None;
-                            }
-                            _ => {}
+                match key.as_str() {
+                    "ArrowUp" | "w" | "W" => {
+                        if current_index > 0 {
+                            *selection = options[current_index - 1]; //move selection up
                         }
-                        return Cmd::none(); //stop movement while menu is open
                     }
+                    "ArrowDown" | "s" | "S" => {
+                        if current_index + 1 < options.len() {
+                            *selection = options[current_index + 1]; //move selection down
+                        }
+                    }
+                    "Enter" => {
+                        //applying selection effects (choosing the option)
+                        match *selection {
+                            MenuOption::Coffee => game_state.buy_coffee(),
+                            MenuOption::Tortilla => game_state.buy_tortilla(),
+                            MenuOption::Smoke => game_state.smoke(),
+                            MenuOption::GoHome => game_state.go_home(),
+                        }
 
-                    //open interaction menu on 'f' or 'F':
-                    if key == "f" || key == "F" {
-                        //only open menu if not already open
-                        if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) { 
-                            if let Some(item_index) = game_state.player_near_item(10.0) {
-                            let item = &game_state.interactive_items[item_index];
-                             if item.id == 2 {      //if we're talking to the only npc we have for now
-                                game_state.interaction_state = InteractionState::Dialogue {     //we enter dialogue mode
-                                    item_index,
-                                    node: DialogueNodes::Živjo,
-                                 };
-                                 return Cmd::none();
-                            }
-                            game_state.interaction_state = InteractionState::MenuOpen {     //otherwise we're near an interactive item
-                                 item_index,
-                                 selection: 0,      //we start from the first item
-                            };
+                        //close menu after selection
+                        game_state.interaction_state = InteractionState::None;
+                    }
+                    "Escape" => {
+                        //cancel menu whenever you press escape
+                        game_state.interaction_state = InteractionState::None;
+                    }
+                    _ => {}
+                }
+
+                return Cmd::none(); //stop movement while menu is open
+            }
+
+            //Open interaction menu on 'f' or 'F':
+            if key.eq_ignore_ascii_case("f") {
+                //only open menu if not already open
+                if !matches!(game_state.interaction_state, InteractionState::MenuOpen { .. }) {
+                    //check if the player is near any interactable
+                    if let Some(interactable) = game_state.player_near_item(40.0) {
+                        match interactable {
+                            Interactable::Object(obj) => match obj {
+                                Objects::Counter | Objects::Door => {
+                                    // Open menu for objects
+                                    let options = GameState::menu_options_for_item(interactable);
+                                    game_state.interaction_state = InteractionState::MenuOpen {
+                                        interactable,
+                                        selection: options[0], //start from the first option
+                                    };
+                                }
+                            },
+                            Interactable::Npc(npc) => match npc {
+                                NpcId::Ema => {
+                                    // If we're talking to the only NPC we have for now
+                                    game_state.interaction_state = InteractionState::Dialogue {
+                                        npc,               //store the NPC
+                                        node: DialogueNodes::Živjo, //start dialogue from Živjo
+                                    };
+                                    return Cmd::none(); //stop movement when dialogue starts
+                                }
+                            },
                         }
                     }
                 }
-            }
+            }}
+
 
                 Msg::KeyUp(key) => {    //we need to remove the key when we stop holding it
                     game_state.pressed_keys.remove(&key);
@@ -208,7 +209,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                     
 
                     //checking whether we're near enough to an interactive item:
-                    game_state.nearby_item = game_state.player_near_item(10.0);     //change this threshold if you want it to activate closer/further
+                    game_state.nearby_item = game_state.player_near_item(40.0);     //change this threshold if you want it to activate closer/further
           
                     if game_state.player.anxiety >= game_state.player.max_anxiety {
                         game_state.screen = Screen::GameOver;
@@ -231,12 +232,13 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
 
             Cmd::none()
          },
+        
         Msg::SelectDialogueOption(choice_index) => {
-            if let InteractionState::Dialogue { item_index, node } =
+            if let InteractionState::Dialogue { npc, node } =
                 &game_state.interaction_state
             {
                 let dialogue = GameState::npc_dialogue(
-                    game_state.interactive_items[*item_index].id,
+                    *npc,
                 );
 
                 let current_node = match dialogue.get(node) {
@@ -252,7 +254,7 @@ pub fn update(game_state: &mut GameState, msg: Msg) -> Cmd<Msg> {       //this f
                 match &response.outcome {
                     DialogueOutcome::Continue(next_node) => {
                         game_state.interaction_state = InteractionState::Dialogue {
-                            item_index: *item_index,
+                            npc: *npc,
                             node: *next_node,
                         };
                     }

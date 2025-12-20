@@ -1,3 +1,4 @@
+use crate::models::interactable::Interactable;
 use crate::msg::Msg;
 use crate::models::gamestate::{GameState, Screen, InteractionState};
 use crate::models::player::Smer;
@@ -298,9 +299,21 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                 )
                             },
 
-                            // Press F prompt
-                            if let Some(item_id) = game_state.nearby_item {
-                                let item = &game_state.interactive_items[item_id];
+                            //Press F prompt
+                            if let Some(interactable) = game_state.nearby_item {
+                                //find the coordinates of the interactable, whether object or npc
+                                let item = match interactable {
+                                    Interactable::Object(obj) => game_state
+                                        .interactive_items
+                                        .iter()
+                                        .find(|i| i.kind == Interactable::Object(obj))
+                                        .unwrap(),
+                                    Interactable::Npc(npc) => game_state
+                                        .interactive_items
+                                        .iter()
+                                        .find(|i| i.kind == Interactable::Npc(npc))
+                                        .unwrap(),
+                                };
 
                                 img(
                                     [
@@ -319,21 +332,18 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                                     [],
                                 )
                             } else {
-                                div([], [])     //empty node
-                            },
+                                div([], []) //empty node
+                            }
                         ],
                     ),
-                    // npc dialogue
-                    if let InteractionState::Dialogue { item_index, node } =
-                    &game_state.interaction_state
-                {
-                    let dialogue = GameState::npc_dialogue(
-                        game_state.interactive_items[*item_index].id,
-                    );
+
+                    //npc dialogue
+                    if let InteractionState::Dialogue { npc, node } = &game_state.interaction_state {
+                    let dialogue = GameState::npc_dialogue(*npc);
                     let current_node = match dialogue.get(node) {
                             Some(n) => n,
                             None => {
-                                // dialogue graph is invalid or ended — render nothing
+                                //dialogue graph is invalid or ended so you don't render anything
                                 return div(vec![], vec![]);
                             }
                         };
@@ -376,58 +386,48 @@ pub fn view(game_state: &GameState) -> Node<Msg> {      //this function will des
                 },
 
                     // meni za interactive items           
-                if let crate::models::gamestate::InteractionState::MenuOpen {
-                    item_index,
-                    selection,
-                } = &game_state.interaction_state
-                {
-                    let options = GameState::menu_options_for_item(*item_index);
+                    if let InteractionState::MenuOpen {
+                        interactable,
+                        selection,
+                    } = &game_state.interaction_state
+                    {
+                        let options = GameState::menu_options_for_item(*interactable);
 
-                    div(
-                        [
-                            style! {
-                                "position": "absolute",
-                                "left": "50%",
-                                "top": "50%",
-                                "transform": "translate(-50%, -50%)",
-                                "background": "#2b1d12",
-                                "border": "3px solid black",
-                                "padding": "16px",
-                                "z-index": "50",
-                                "min-width": "220px",
-                                "font-family": "monospace",
-                                "color": "white",
-                            },
-                        ],
-                        options
-                            .iter()
-                            .enumerate()
-                            .map(|(i, label)| {
+                        div(
+                            [
+                                style! {
+                                    "position": "absolute",
+                                    "left": "50%",
+                                    "top": "50%",
+                                    "transform": "translate(-50%, -50%)",
+                                    "background": "#2b1d12",
+                                    "border": "3px solid black",
+                                    "padding": "16px",
+                                    "z-index": "50",
+                                    "min-width": "220px",
+                                    "font-family": "monospace",
+                                    "color": "white",
+                                },
+                            ],
+                            options.iter().map(|option| {
+                                let selected = option == selection;
+
                                 div(
                                     [
                                         style! {
                                             "padding": "6px 10px",
                                             "margin-bottom": "4px",
-                                            "background": if i == *selection {
-                                                "#ffdd35"
-                                            } else {
-                                                "transparent"
-                                            },
-                                            "color": if i == *selection {
-                                                "black"
-                                            } else {
-                                                "white"
-                                            },
+                                            "background": if selected { "#ffdd35" } else { "transparent" },
+                                            "color": if selected { "black" } else { "white" },
                                         },
                                     ],
-                                    [text(label)],
+                                    [text(option.label())],
                                 )
                             }),
-                    )
-                } else {
-                    div([], [])
-                }
-
+                        )
+                    } else {
+                        div([], [])
+                    }
                 ],
             )
         },
